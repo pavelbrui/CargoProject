@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './index.css';
 
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
+//import Login from './pages/Login';
+//import Register from './pages/Register';
 import { LanguageProvider, useLanguage } from './LanguageContext'; // Import kontekstu
 
 const LanguageSelector = () => {

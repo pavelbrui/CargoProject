@@ -20,7 +20,7 @@ const ContactInfoForm = ({ onSubmit }) => {
     });
 
     const [email, setEmail] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [phoneNumber] = useState('');
 
     const handleAddressChange = (e, addressType) => {
         const { name, value } = e.target;
