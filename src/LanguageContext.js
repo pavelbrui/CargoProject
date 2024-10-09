@@ -19,7 +19,6 @@ export const useLanguage = () => {
     return useContext(LanguageContext);
 };
 
-
 export const translationsOrderForm = {
     en: {
         fromCountry: "From Country",
@@ -35,8 +34,8 @@ export const translationsOrderForm = {
         height: "Height",
         weight: "Weight",
         description: "Description",
-        addPackage: "Add element",
-        removePackage: "Remove Package",
+        addElement: "Add element", // Zmieniono "Add package" na "Add element"
+        removeElement: "Remove element", // Zmieniono "Remove Package" na "Remove element"
         calculatePrice: "Calculate Price",
         totalPrice: "Total Price",
         email: "Email",
@@ -56,7 +55,7 @@ export const translationsOrderForm = {
         addressGoogle: "Address (Google)",
         fullName: "Full Name", // Full Name remains added
         sendOrder: "Send order",
-        kurier: "Kurier delievery"
+        kurier: "Kurier delivery"
     },
     pl: {
         fromCountry: "Kraj nadania",
@@ -72,8 +71,8 @@ export const translationsOrderForm = {
         height: "Wysokość",
         weight: "Waga",
         description: "Opis",
-        addPackage: "Dodaj element",
-        removePackage: "Usuń paczkę",
+        addElement: "Dodaj element", // Zmieniono "Dodaj paczkę" na "Dodaj element"
+        removeElement: "Usuń element", // Zmieniono "Usuń paczkę" na "Usuń element"
         calculatePrice: "Oblicz cenę",
         totalPrice: "Cena całkowita",
         email: "Email",
@@ -108,8 +107,8 @@ export const translationsOrderForm = {
         height: "Высота",
         weight: "Вес",
         description: "Описание",
-        addPackage: "Добавить элемент",
-        removePackage: "Удалить элемент",
+        addElement: "Добавить элемент", // Zmieniono "Добавить пакет" na "Добавить элемент"
+        removeElement: "Удалить элемент", // Zmieniono "Удалить пакет" na "Удалить элемент"
         calculatePrice: "Рассчитать цену",
         totalPrice: "Общая цена",
         email: "Электронная почта",

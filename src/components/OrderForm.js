@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useDrop } from 'react-dnd';
@@ -24,13 +24,13 @@ const OrderForm = () => {
 
     const [contactInfo, setContactInfo] = useState(null);
     const [showContactForm, setShowContactForm] = useState(false);
-    const [calculatedPrice, setCalculatedPrice] = useState(null); // State for storing calculated price
+    const [calculatedPrice, setCalculatedPrice] = useState(null);
     const { language } = useLanguage();
     
     const [calculateOrder] = useLazyQuery(CALCULATE_ORDER, {
         onCompleted: (data) => {
             const price = data.public.calculateMyOrder;
-            setCalculatedPrice(price); // Store the calculated price
+            setCalculatedPrice(price);
             setFormData((prevState) => ({
                 ...prevState,
                 totalPrice: price,
@@ -87,10 +87,21 @@ const OrderForm = () => {
         }),
     });
 
+    // Automatically calculate price whenever required fields change
+    useEffect(() => {
+        const allRequiredFilled = formData.elements.every(dim => 
+            dim.length && dim.width && dim.height && dim.weight
+        ) && formData.paymentCurrency && formData.fromCountry && formData.toCountry;
+
+        if (allRequiredFilled) {
+            handleCalculatePrice();
+        }
+    }, [formData.elements, formData.paymentCurrency, formData.fromCountry, formData.toCountry]);
+
     const handleCalculatePrice = async () => {
         const input = {
             paymentCurrency: formData.paymentCurrency,
-            direction: `${formData.fromCountry}_${formData.toCountry}`, // Constructing the direction from selected countries
+            direction: `${formData.fromCountry}_${formData.toCountry}`,
             deliveryType: formData.deliveryType,
             ownerType: formData.ownerType,
             elements: formData.elements.map(dim => ({
@@ -132,7 +143,7 @@ const OrderForm = () => {
             ownerType: formData.ownerType,
             phoneNumber: contactInfo?.phoneNumber || '',
             toDoor: formData.toDoor,
-            totalPrice: calculatedPrice || '0', // Use the calculated price in the submission
+            totalPrice: calculatedPrice || '0',
         };
 
         try {
@@ -147,7 +158,7 @@ const OrderForm = () => {
     const handleContactInfoSubmit = (info) => {
         setContactInfo(info);
         setShowContactForm(false);
-        handleSubmit(); // Call the submit function to send the order
+        handleSubmit();
     };
 
     return (
@@ -164,7 +175,6 @@ const OrderForm = () => {
                         <option value="BISNES">{t.businessOwner}</option>
                     </select>
                 </div>
-                {/* From and To Country Selectors */}
                 <div style={formStyles.row}>
                     <label>{t.fromCountry}:</label>
                     <select name="fromCountry" onChange={handleChange} style={formStyles.input} required>
@@ -199,7 +209,6 @@ const OrderForm = () => {
                     </select>
                 </div>
 
-                {/* Delivery Type and Owner Type Selectors */}
                 <div style={formStyles.row}>
                     <label>{t.deliveryType}:</label>
                     <select name="deliveryType" value={formData.deliveryType} onChange={handleChange} style={formStyles.input} required>
@@ -209,33 +218,34 @@ const OrderForm = () => {
                     </select>
                 </div>
 
-              
-            </fieldset>
-            <fieldset style={formStyles.fieldset}>
-    <legend style={formStyles.legend}>{t.doorDelivery}</legend>
-    <h3 style={formStyles.row}>{t.kurier}</h3>
-    <div style={formStyles.row}>
-        
-        <label style={formStyles.checkboxLabel}>
-            <input type="checkbox" name="fromDoor" checked={formData.fromDoor} onChange={handleCheckboxChange} />
-            {t.fromDoor}
-        </label>
-        <label style={formStyles.checkboxLabel}>
-            <input type="checkbox" name="toDoor" checked={formData.toDoor} onChange={handleCheckboxChange} />
-            {t.toDoor}
-        </label>
-    </div>
-</fieldset>
+                <div style={formStyles.row}>
+                    <label>{t.fromDoor}:</label>
+                    <input
+                        type="checkbox"
+                        name="fromDoor"
+                        checked={formData.fromDoor}
+                        onChange={handleCheckboxChange}
+                    />
+                </div>
 
-            <fieldset style={formStyles.fieldset}>
-                <legend style={formStyles.legend}>{t.dimensions}</legend>
-                <div ref={drop} style={{ ...formStyles.dropArea, border: isOver ? '2px dashed green' : '2px solid transparent' }}>
+                <div style={formStyles.row}>
+                    <label>{t.toDoor}:</label>
+                    <input
+                        type="checkbox"
+                        name="toDoor"
+                        checked={formData.toDoor}
+                        onChange={handleCheckboxChange}
+                    />
+                </div>
+
+                <div style={formStyles.row}>
+                    <h3>{t.dimensions}</h3>
                     <TransitionGroup>
-                        {formData.elements.map((dimension, index) => (
-                            <CSSTransition key={index} timeout={300} classNames="fade">
+                        {formData.elements.map((element, index) => (
+                            <CSSTransition key={index} timeout={500} classNames="fade">
                                 <DraggableDimensionInput
                                     index={index}
-                                    dimension={dimension}
+                                    dimension={element}
                                     handleDimensionChange={handleDimensionChange}
                                     removeDimension={removeDimension}
                                     moveDimension={moveDimension}
@@ -243,31 +253,26 @@ const OrderForm = () => {
                             </CSSTransition>
                         ))}
                     </TransitionGroup>
+                    <button type="button" onClick={addDimension} style={formStyles.button}>{t.addElement}</button>
                 </div>
-                <button type="button" onClick={addDimension} style={formStyles.addButton}>{t.addPackage}</button>
+
+                {calculatedPrice && (
+                    <div style={formStyles.priceContainer}>
+                        <h3 style={formStyles.priceHeader}>{t.calculatePrice}: {calculatedPrice}</h3>
+                    </div>
+                )}
             </fieldset>
 
-            
-
-            <button type="button" onClick={handleCalculatePrice} style={formStyles.calculateButton}>
-                {t.calculatePrice}
-            </button>
-
-            {/* Display the calculated price */}
-            {calculatedPrice && (
-                <p style={formStyles.price}>{t.calculatedPrice}: {calculatedPrice}</p>
-            )}
-
-            <button type="button" onClick={() => setShowContactForm(true)} style={formStyles.submitButton}>
-                {t.createOrder}
-            </button>
-
-            {showContactForm && (
+            {showContactForm ? (
                 <ContactInfoForm onSubmit={handleContactInfoSubmit} />
+            ) : (
+                <button type="button" onClick={() => setShowContactForm(true)} style={formStyles.button}>{t.createOrder}</button>
             )}
         </form>
     );
 };
+
+
 
 const formStyles = {
     container: {
@@ -344,16 +349,34 @@ const formStyles = {
         borderRadius: '5px',
         cursor: 'pointer',
     },
-    price: {
-        textAlign: 'center',
-        fontSize: '18px',
-        fontWeight: 'bold',
-        color: '#333',
-    },
      checkboxLabel: {
         display: 'flex',
         alignItems: 'right',
         marginRight: '1px', // Space between checkboxes
+    },
+    buttonRow: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: '15px',
+    },
+    actionSection: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: '20px',
+    },
+    priceCalculationRow: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%',
+        alignItems: 'center',
+        marginBottom: '15px',
+    },
+    price: {
+        marginLeft: '15px',
+        fontSize: '18px',
+        fontWeight: 'bold',
+        color: '#333',
     },
 };
 
