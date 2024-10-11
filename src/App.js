@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './index.css';
 
 import Home from './pages/Home';
+import MyOrders from './pages/MyOrders';
 //import Login from './pages/Login';
 //import Register from './pages/Register';
 import { LanguageProvider, useLanguage } from './LanguageContext'; // Import kontekstu
@@ -29,9 +30,10 @@ function App() {
                 <header className="app-header">
                     <nav>
                         <ul className="nav-list">
-                            <li className="nav-item"><Link to="/">PL-CARGO</Link></li>
-                           {/* <li className="nav-item"><Link to="/login">Login</Link></li>
-                            <li className="nav-item"><Link to="/register">Register</Link></li>*/}
+                            <li className="nav-item a">PL-CARGO</li>
+                            <li className="nav-item"><Link to="/">New Order</Link></li>
+                            <li className="nav-item"><Link to="/my_orders">My orders</Link></li>
+                           {/* <li className="nav-item"><Link to="/register">Register</Link></li>*/}
                         </ul>
                     </nav>
 
@@ -42,8 +44,8 @@ function App() {
                 <main>
                     <Routes>
                         <Route path="/" element={<Home />} />
-                       {/* <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} /> */}
+                        <Route path="/my_orders" element={<MyOrders />} />
+                       {/* <Route path="/register" element={<Register />} /> */}
                     </Routes>
                 </main>
             </Router>

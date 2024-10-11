@@ -28,14 +28,14 @@ export const translationsOrderForm = {
         ownerType: "Owner Type",
         fromDoor: "From Door",
         toDoor: "To Door",
-        package: "#",
-        length: "Length",
-        width: "Width",
-        height: "Height",
-        weight: "Weight",
+        package: "Package #",
+        length: "Length (cm)", // Added (cm)
+        width: "Width (cm)", // Added (cm)
+        height: "Height (cm)", // Added (cm)
+        weight: "Weight (kg)", // Added (kg)
         description: "Description",
-        addElement: "Add element", // Zmieniono "Add package" na "Add element"
-        removeElement: "Remove element", // Zmieniono "Remove Package" na "Remove element"
+        addElement: "Add element", // Changed "Add package" to "Add element"
+        removeElement: "Remove element", // Changed "Remove Package" to "Remove element"
         calculatePrice: "Calculate Price",
         totalPrice: "Total Price",
         email: "Email",
@@ -46,36 +46,35 @@ export const translationsOrderForm = {
         trainDelivery: "Train",
         privateOwner: "Private",
         businessOwner: "Business",
-        // Contact Info and Address translations
         contactInformation: "Contact Information",
         fromAddress: "From Address",
         toAddress: "To Address",
         flat: "Flat",
         phone: "Phone",
         addressGoogle: "Address (Google)",
-        fullName: "Full Name", // Full Name remains added
+        fullName: "Full Name",
         sendOrder: "Send order",
-        kurier: "Kurier delivery"
+        kurier: "Courier delivery" // Changed "Kurier" to "Courier delivery"
     },
     pl: {
         fromCountry: "Kraj nadania",
         toCountry: "Kraj odbioru",
         deliveryType: "Typ dostawy",
-        paymentCurrency: "Płatność od", // Restored paymentCurrency
+        paymentCurrency: "Płatność od", // Restored "paymentCurrency"
         ownerType: "Typ właściciela",
-        fromDoor: "Z drzwi",
-        toDoor: "Do drzwi",
-        package: "#",
-        length: "Długość",
-        width: "Szerokość",
-        height: "Wysokość",
-        weight: "Waga",
+        fromDoor: "Kurierska dostawa od drzwi",
+        toDoor: "Kurierska dostawa do drzwi",
+        package: "Paczka #", // Clarified "Paczka #"
+        length: "Długość (cm)", // Added (cm)
+        width: "Szerokość (cm)", // Added (cm)
+        height: "Wysokość (cm)", // Added (cm)
+        weight: "Waga (kg)", // Added (kg)
         description: "Opis",
-        addElement: "Dodaj element", // Zmieniono "Dodaj paczkę" na "Dodaj element"
-        removeElement: "Usuń element", // Zmieniono "Usuń paczkę" na "Usuń element"
+        addElement: "Dodaj element", // Changed "Dodaj paczkę" to "Dodaj element"
+        removeElement: "Usuń element", // Changed "Usuń paczkę" to "Usuń element"
         calculatePrice: "Oblicz cenę",
         totalPrice: "Cena całkowita",
-        email: "Email",
+        userEmail: "Email",
         phoneNumber: "Numer telefonu",
         createOrder: "Złóż zamówienie",
         airDelivery: "Powietrzny",
@@ -83,35 +82,34 @@ export const translationsOrderForm = {
         trainDelivery: "Kolejowy",
         privateOwner: "Prywatny",
         businessOwner: "Firmowy",
-        // Contact Info and Address translations
         contactInformation: "Informacje kontaktowe",
         fromAddress: "Adres nadawcy",
         toAddress: "Adres odbiorcy",
         flat: "Mieszkanie",
         phone: "Telefon",
         addressGoogle: "Adres (Google)",
-        fullName: "Imię i nazwisko", // Full Name remains added
+        fullName: "Imię i nazwisko",
         sendOrder: "Złóż zamówienie",
     },
     ru: {
         fromCountry: "Страна отправления",
         toCountry: "Страна получения",
         deliveryType: "Тип доставки",
-        paymentCurrency: "Оплата из", // Restored paymentCurrency
+        paymentCurrency: "Оплата из", // Restored "paymentCurrency"
         ownerType: "Тип владельца",
         fromDoor: "От двери",
         toDoor: "До двери",
-        package: "#",
-        length: "Длина",
-        width: "Ширина",
-        height: "Высота",
-        weight: "Вес",
+        package: "Посылка #", // Clarified "Посылка #"
+        length: "Длина (см)", // Added (см)
+        width: "Ширина (см)", // Added (см)
+        height: "Высота (см)", // Added (см)
+        weight: "Вес (кг)", // Added (кг)
         description: "Описание",
-        addElement: "Добавить элемент", // Zmieniono "Добавить пакет" na "Добавить элемент"
-        removeElement: "Удалить элемент", // Zmieniono "Удалить пакет" na "Удалить элемент"
+        addElement: "Добавить элемент", // Changed "Добавить пакет" to "Добавить элемент"
+        removeElement: "Удалить элемент", // Changed "Удалить пакет" to "Удалить элемент"
         calculatePrice: "Рассчитать цену",
         totalPrice: "Общая цена",
-        email: "Электронная почта",
+        userEmail: "Электронная почта",
         phoneNumber: "Номер телефона",
         createOrder: "Создать заказ",
         airDelivery: "Авиаперевозка",
@@ -119,14 +117,14 @@ export const translationsOrderForm = {
         trainDelivery: "Железнодорожная перевозка",
         privateOwner: "Частный",
         businessOwner: "Бизнес",
-        // Contact Info and Address translations
         contactInformation: "Контактная информация",
         fromAddress: "Адрес отправителя",
         toAddress: "Адрес получателя",
         flat: "Квартира",
         phone: "Телефон",
         addressGoogle: "Адрес (Google)",
-        fullName: "Полное имя", // Full Name remains added
+        fullName: "Полное имя",
         sendOrder: "Отправить заказ",
     },
 };
+

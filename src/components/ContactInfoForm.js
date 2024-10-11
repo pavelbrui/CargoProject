@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
-import { useLanguage, translationsOrderForm } from '../LanguageContext'; // Import the language context
+import { useLanguage, translationsOrderForm } from '../LanguageContext';
 import './ContactInfoForm.css'; // Import the styles
 
 const ContactInfoForm = ({ onSubmit }) => {
-    const { language } = useLanguage(); // Get the current language
-    const t = translationsOrderForm[language]; // Access translations based on current language
+    const { language } = useLanguage();
+    const t = translationsOrderForm[language];
 
     const [fromAddress, setFromAddress] = useState({
-        fullName: '', // Add FullName to the state
-        flat: '',
-        phone: '',
-        addressGoogleString: '',
-    });
-    const [toAddress, setToAddress] = useState({
-        fullName: '', // Add FullName to the state
+        fullName: '',
         flat: '',
         phone: '',
         addressGoogleString: '',
     });
 
-    const [email, setEmail] = useState('');
-    const [phoneNumber] = useState('');
+    const [toAddress, setToAddress] = useState({
+        fullName: '',
+        flat: '',
+        phone: '',
+        addressGoogleString: '',
+    });
+
+    const [userEmail, setEmail] = useState('');
 
     const handleAddressChange = (e, addressType) => {
         const { name, value } = e.target;
@@ -31,75 +31,26 @@ const ContactInfoForm = ({ onSubmit }) => {
         }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();  // Prevent page reload
+
         onSubmit({
             from: fromAddress,
             to: toAddress,
-            contact: {
-                email,
-                phoneNumber,
-            }
+            userEmail,  // Przekazanie email
         });
     };
-
-    // const [sendOrder] = useMutation(SEND_ORDER);
-
-    // const [loading, setLoading] = useState(false);
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setLoading(true)
-        
-    //     const dimensionsInput = [{
-    //         length:  0,
-    //         width:  0,
-    //         height:  0,
-    //         weight: 0,
-    //         description: '',
-    //     }];
-
-    //     const input = {
-    //         from: fromAddress,
-    //         to: toAddress,
-    //         paymentCurrency: 'USD',
-    //         direction: `USA_PL`,
-    //         deliveryType: "SEA",
-    //         elements: dimensionsInput,
-    //         userEmail: '',
-    //         fromDoor: true,
-    //         ownerType: 'PRIVAT',
-    //         phoneNumber: '687875',
-    //         toDoor: true,
-    //         totalPrice: 56, // Use the calculated price in the submission
-    //     };
-
-    //     try {
-           
-    //         const result = await sendOrder({ variables: { input } });
-    //         console.log('Order submitted:', result.data.user.sendOrder);
-    //         // Clear form or show success message
-    //     } catch (err) {
-    //           if (err.graphQLErrors) {
-    //     err.graphQLErrors.forEach(({ message }) => {
-    //         console.error('GraphQL error:', message);
-    //     });
-    // } else if (err.networkError) {
-    //     console.error('Network error:', err.networkError);
-    // } else {
-    //     console.error('Error submitting order:', err.message);
-    // }
-    //     }
-    // };
 
     return (
         <form className="contact-info-form" onSubmit={handleSubmit}>
             <fieldset>
                 <legend>{t.contactInformation}</legend>
                 <div className="form-group">
-                    <label>{t.email}:</label>
+                    <label htmlFor="userEmail">{t.userEmail}:</label>
                     <input
                         type="email"
-                        value={email}
+                        id="email"
+                        value={userEmail}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
@@ -110,9 +61,10 @@ const ContactInfoForm = ({ onSubmit }) => {
             <fieldset>
                 <legend>{t.fromAddress}</legend>
                 <div className="form-group">
-                    <label>{t.fullName}:</label> {/* Add FullName input */}
+                    <label htmlFor="fromFullName">{t.fullName}:</label>
                     <input
                         type="text"
+                        id="fromFullName"
                         name="fullName"
                         value={fromAddress.fullName}
                         onChange={(e) => handleAddressChange(e, 'from')}
@@ -120,27 +72,31 @@ const ContactInfoForm = ({ onSubmit }) => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>{t.flat}:</label>
+                    <label htmlFor="fromFlat">{t.flat}:</label>
                     <input
                         type="text"
+                        id="fromFlat"
                         name="flat"
                         value={fromAddress.flat}
                         onChange={(e) => handleAddressChange(e, 'from')}
                     />
                 </div>
                 <div className="form-group">
-                    <label>{t.phone}:</label>
+                    <label htmlFor="fromPhone">{t.phone}:</label>
                     <input
                         type="tel"
+                        id="fromPhone"
                         name="phone"
                         value={fromAddress.phone}
                         onChange={(e) => handleAddressChange(e, 'from')}
+                        required
                     />
                 </div>
                 <div className="form-group">
-                    <label>{t.addressGoogle}:</label>
+                    <label htmlFor="fromAddressGoogle">{t.addressGoogle}:</label>
                     <input
                         type="text"
+                        id="fromAddressGoogle"
                         name="addressGoogleString"
                         value={fromAddress.addressGoogleString}
                         onChange={(e) => handleAddressChange(e, 'from')}
@@ -153,9 +109,10 @@ const ContactInfoForm = ({ onSubmit }) => {
             <fieldset>
                 <legend>{t.toAddress}</legend>
                 <div className="form-group">
-                    <label>{t.fullName}:</label> {/* Add FullName input */}
+                    <label htmlFor="toFullName">{t.fullName}:</label>
                     <input
                         type="text"
+                        id="toFullName"
                         name="fullName"
                         value={toAddress.fullName}
                         onChange={(e) => handleAddressChange(e, 'to')}
@@ -163,27 +120,31 @@ const ContactInfoForm = ({ onSubmit }) => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>{t.flat}:</label>
+                    <label htmlFor="toFlat">{t.flat}:</label>
                     <input
                         type="text"
+                        id="toFlat"
                         name="flat"
                         value={toAddress.flat}
                         onChange={(e) => handleAddressChange(e, 'to')}
                     />
                 </div>
                 <div className="form-group">
-                    <label>{t.phone}:</label>
+                    <label htmlFor="toPhone">{t.phone}:</label>
                     <input
                         type="tel"
+                        id="toPhone"
                         name="phone"
                         value={toAddress.phone}
                         onChange={(e) => handleAddressChange(e, 'to')}
+                        required
                     />
                 </div>
                 <div className="form-group">
-                    <label>{t.addressGoogle}:</label>
+                    <label htmlFor="toAddressGoogle">{t.addressGoogle}:</label>
                     <input
                         type="text"
+                        id="toAddressGoogle"
                         name="addressGoogleString"
                         value={toAddress.addressGoogleString}
                         onChange={(e) => handleAddressChange(e, 'to')}
@@ -192,7 +153,9 @@ const ContactInfoForm = ({ onSubmit }) => {
                 </div>
             </fieldset>
 
-            <button type="submit" className="submit-btn">{t.sendOrder}</button>
+            <button type="submit">
+                {t.createOrder}
+            </button>
         </form>
     );
 };
