@@ -1,11 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
 import './index.css';
 
 import Home from './pages/Home';
 import MyOrders from './pages/MyOrders';
-//import Login from './pages/Login';
-//import Register from './pages/Register';
+import Register from './pages/Register';
 import { LanguageProvider, useLanguage } from './LanguageContext'; // Import kontekstu
 
 const LanguageSelector = () => {
@@ -31,9 +30,23 @@ function App() {
                     <nav>
                         <ul className="nav-list">
                             <li className="nav-item a">PL-CARGO</li>
-                            <li className="nav-item"><Link to="/">New Order</Link></li>
-                            <li className="nav-item"><Link to="/my_orders">My orders</Link></li>
-                           {/* <li className="nav-item"><Link to="/register">Register</Link></li>*/}
+                            <li className="nav-item">
+                                <NavLink
+                                    to="/"
+                                    className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+                                >
+                                    New Order
+                                </NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <NavLink
+                                    to="/my_orders"
+                                    className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+                                >
+                                    My Orders
+                                </NavLink>
+                            </li>
+                            {/* <li className="nav-item"><NavLink to="/register" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>Register</NavLink></li> */}
                         </ul>
                     </nav>
 
@@ -45,7 +58,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/my_orders" element={<MyOrders />} />
-                       {/* <Route path="/register" element={<Register />} /> */}
+                        <Route path="/register" element={<Register />} /> 
                     </Routes>
                 </main>
             </Router>

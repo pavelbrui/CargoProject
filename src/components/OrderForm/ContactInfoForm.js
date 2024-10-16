@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLanguage, translationsOrderForm } from '../LanguageContext';
+import { useLanguage, translationsOrderForm } from '../../LanguageContext';
 import './ContactInfoForm.css'; // Import the styles
 
 const ContactInfoForm = ({ onSubmit }) => {
@@ -21,6 +21,7 @@ const ContactInfoForm = ({ onSubmit }) => {
     });
 
     const [userEmail, setEmail] = useState('');
+
 
     const handleAddressChange = (e, addressType) => {
         const { name, value } = e.target;
@@ -153,7 +154,7 @@ const ContactInfoForm = ({ onSubmit }) => {
                 </div>
             </fieldset>
 
-            <button type="submit">
+            <button type="submit" className="submit-btn">
                 {t.createOrder}
             </button>
         </form>

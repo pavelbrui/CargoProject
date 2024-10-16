@@ -42,13 +42,16 @@ legend {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     color: #fff;
-    background-color: #007bff;
+    background-color: #b60d0d;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+
 }
 
 .submit-btn:hover {
-    background-color: #0056b3;
-}
+    background-color: #0f0f0f;
+} 
+
+

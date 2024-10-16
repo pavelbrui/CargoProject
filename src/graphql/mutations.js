@@ -17,8 +17,8 @@ export const REGISTER_USER = gql`
     mutation Register($user: RegisterInput!) {
         public {
             register(user: $user) {
-                result
-                error
+                registered
+                hasError
             }
         }
     }
