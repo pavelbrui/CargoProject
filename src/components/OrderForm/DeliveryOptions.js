@@ -252,7 +252,6 @@ const formStyles = {
         fontSize: '16px',
         fontWeight: 'bold',
         backgroundColor: '#f8f5f1',
-        border: 'none',
         borderRadius: '8px',
         cursor: 'pointer',
         transition: 'background-color 0.3s ease',
