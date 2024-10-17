@@ -4,7 +4,11 @@ import { Tooltip } from 'react-tooltip';
 const DeliveryOptions = ({ formData, setFormData, t }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({
+            ...prev,
+            [name]: value,
+            direction: name === 'fromCountry' || name === 'toCountry' ? `${formData.fromCountry}_${formData.toCountry}` : prev.direction,
+        }));
     };
 
     const handleCheckboxChange = (e) => {
@@ -17,6 +21,7 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
             ...prev,
             fromCountry: prev.toCountry,
             toCountry: prev.fromCountry,
+            direction: `${prev.toCountry}_${prev.fromCountry}`,
         }));
     };
 

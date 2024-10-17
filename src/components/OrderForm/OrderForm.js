@@ -158,15 +158,18 @@ const createSendOrderInput = (contactInfo, formData, calculatedPrice) => {
     return {
         userEmail: contactInfo.userEmail,
         from: {
+            country: formData.fromCountry,
             fullName: contactInfo.from.fullName,
             phone: contactInfo.from.phone,
             addressGoogleString: contactInfo.from.addressGoogleString,
         },
         to: {
+            country: formData.toCountry,
             fullName: contactInfo.to.fullName,
             phone: contactInfo.to.phone,
             addressGoogleString: contactInfo.to.addressGoogleString,
         },
+        direction: `${formData.fromCountry}_${formData.toCountry}`,
         deliveryType: formData.deliveryType,
         ownerType: formData.ownerType,
         paymentCurrency: formData.paymentCurrency,
