@@ -29,12 +29,11 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
         <fieldset style={formStyles.fieldset}>
             <legend style={formStyles.legend}>{t.deliveryInformation}</legend>
 
-            {/* Kierunek przesyłki - Od i Do w jednej linii */}
+            {/* Direction row for 'from' and 'to' countries */}
             <div style={formStyles.directionRowCloseAligned}>
                 <div style={formStyles.fieldGroupSmall}>
-                    <label htmlFor="fromCountry" style={formStyles.labelBlack}>
+                    <label htmlFor="fromCountry" style={formStyles.labelBlack} data-tooltip-id="from-country-tooltip" data-tooltip-content={t.fromCountryTooltip}>
                         {t.fromCountry}
-                        <Tooltip content={t.fromCountryTooltip} id="from-country-tooltip" />
                     </label>
                     <select
                         id="fromCountry"
@@ -52,14 +51,14 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         <option value="RU">{t.russia}</option>
                         <option value="IL">{t.israel}</option>
                     </select>
+                    <Tooltip anchorId="fromCountry" place="top" effect="solid" />
                 </div>
 
                 <button onClick={handleReverse} style={formStyles.reverseButton}>&#8596;</button>
 
                 <div style={formStyles.fieldGroupSmall}>
-                    <label htmlFor="toCountry" style={formStyles.labelBlack}>
+                    <label htmlFor="toCountry" style={formStyles.labelBlack} data-tooltip-id="to-country-tooltip" data-tooltip-content={t.toCountryTooltip}>
                         {t.toCountry}
-                        <Tooltip content={t.toCountryTooltip} id="to-country-tooltip" />
                     </label>
                     <select
                         id="toCountry"
@@ -77,16 +76,16 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         <option value="RU">{t.russia}</option>
                         <option value="IL">{t.israel}</option>
                     </select>
+                    <Tooltip anchorId="toCountry" place="top" effect="solid" />
                 </div>
             </div>
 
-            {/* Blok z ownerType, deliveryType, paymentCurrency i Courier Service */}
+            {/* Block for ownerType, deliveryType, paymentCurrency, and Courier Service */}
             <div style={formStyles.cardBlockCombinedAligned}>
                 <div style={formStyles.fieldRowCombinedAligned}>
                     <div style={formStyles.fieldGroupInline}>
-                        <label htmlFor="ownerType" style={formStyles.labelBlack}>
+                        <label htmlFor="ownerType" style={formStyles.labelBlack} data-tooltip-id="owner-type-tooltip" data-tooltip-content={t.ownerTypeTooltip}>
                             {t.ownerType}
-                            <Tooltip content={t.ownerTypeTooltip} id="owner-type-tooltip" />
                         </label>
                         <select
                             id="ownerType"
@@ -100,12 +99,12 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                             <option value="PRIVAT">{t.privateOwner}</option>
                             <option value="BISNES">{t.businessOwner}</option>
                         </select>
+                        <Tooltip anchorId="ownerType" place="top" effect="solid" />
                     </div>
 
                     <div style={formStyles.fieldGroupInline}>
-                        <label htmlFor="deliveryType" style={formStyles.labelBlack}>
+                        <label htmlFor="deliveryType" style={formStyles.labelBlack} data-tooltip-id="delivery-type-tooltip" data-tooltip-content={t.deliveryTypeTooltip}>
                             {t.deliveryType}
-                            <Tooltip content={t.deliveryTypeTooltip} id="delivery-type-tooltip" />
                         </label>
                         <select
                             id="deliveryType"
@@ -120,12 +119,12 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                             <option value="SEA">{t.seaDelivery}</option>
                             <option value="TRAIN">{t.trainDelivery}</option>
                         </select>
+                        <Tooltip anchorId="deliveryType" place="top" effect="solid" />
                     </div>
 
                     <div style={formStyles.fieldGroupInline}>
-                        <label htmlFor="paymentCurrency" style={formStyles.labelBlack}>
+                        <label htmlFor="paymentCurrency" style={formStyles.labelBlack} data-tooltip-id="payment-currency-tooltip" data-tooltip-content={t.paymentCurrencyTooltip}>
                             {t.paymentCurrency}
-                            <Tooltip content={t.paymentCurrencyTooltip} id="payment-currency-tooltip" />
                         </label>
                         <select
                             id="paymentCurrency"
@@ -143,6 +142,7 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         </select>
                     </div>
                 </div>
+                <Tooltip anchorId="paymentCurrency" place="top" effect="solid" />
 
                 <div style={formStyles.checkboxesRowInlineAlignedCenteredContainer}>
                     <div style={formStyles.checkboxesRowInlineAlignedCentered}>
@@ -176,14 +176,14 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         </div>
                     </div>
                 </div>
-                
             </div>
         </fieldset>
-         
     );
 };
 
 export default DeliveryOptions;
+
+
 
 const formStyles = {
     fieldset: {

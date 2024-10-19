@@ -13,6 +13,7 @@ const OrderForm = () => {
     const [formData, setFormData] = useState({
         paymentCurrency: 'PLN',
         fromCountry: 'USA',
+        direction: 'USA_PL',
         toCountry: 'PL',
         deliveryType: 'AIR',
         ownerType: 'PRIVAT',

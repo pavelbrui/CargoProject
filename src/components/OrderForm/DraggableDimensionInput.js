@@ -112,7 +112,7 @@ export default DraggableDimensionInput;
 
 const formStyles = {
     draggableContainer: {
-        border: '2px solid #b88e2f',
+        border: '3px solid #b88e2f',
         backgroundColor: '#f8f5f1',
         borderRadius: '10px',
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
@@ -147,16 +147,17 @@ const formStyles = {
     },
     dimensionRow: {
         display: 'flex',
+        flexWrap: 'wrap',
         gap: '15px',
     },
     dimensionFieldGroupRow: {
-        flex: 1,
+        flex: '1 1 calc(50% - 15px)',
         display: 'flex',
         alignItems: 'center',
         gap: '10px',
     },
     dimensionFieldGroupFullWidthRow: {
-        flex: 1,
+        flex: '1 1 100%',
         display: 'flex',
         alignItems: 'center',
         gap: '10px',
@@ -177,7 +178,7 @@ const formStyles = {
         boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
     },
     inputSmall: {
-        width: '100px',
+        flex: '1 1 100%',
         padding: '8px',
         border: '1px solid #ccc',
         borderRadius: '8px',
@@ -185,7 +186,7 @@ const formStyles = {
         boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
     },
     inputLarge: {
-        width: '465px',
+        flex: '1 1 100%',
         padding: '8px',
         border: '1px solid #ccc',
         borderRadius: '8px',

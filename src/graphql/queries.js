@@ -60,3 +60,54 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+
+
+
+
+
+
+export const GET_USER_DETAILS = gql`
+  query GetUserDetails {
+  user{
+    me {
+      _id
+      username
+      teams 
+    }
+   }
+  }
+`;
+
+
+export const GET_PRICINGS = gql`
+  query GetPricings($direction: String, $paymentCurrency: CountryCurrency, $teamId: String!) {
+    admin(teamId: $teamId) {
+      getPricings(direction: $direction, paymentCurrency: $paymentCurrency) {
+        _id
+        ownerType
+        direction
+        paymentCurrency
+        priceTypes {
+          deliveryType
+          minPrice
+          priceForKg
+        }
+        courierMinPrice
+        courierKgToHome
+        courierKgFromHome
+      }
+    }
+  }
+`;
+
+
+export const GET_ENUM = gql`
+query GetEnumValues($enumName: String!) {
+  __type(name: $enumName) {
+    enumValues {
+      name
+    }
+  }
+}
+`  

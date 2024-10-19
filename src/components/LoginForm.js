@@ -1,6 +1,6 @@
 // src/components/LoginForm.js
 import React, { useState } from 'react';
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { LOGIN_USER } from '../graphql/queries';
 import './LoginForm.css';
@@ -30,7 +30,7 @@ const LoginForm = ({ onLoginSuccess, onRegister, onForgotPassword }) => {
             const { data } = await loginUser({ variables: { user: formData } });
             if (data?.public?.login?.password?.accessToken) {
                 const accessToken = data.public.login.password.accessToken;
-                localStorage.setItem('token', accessToken);
+                sessionStorage.setItem('token', accessToken); // Using sessionStorage instead of localStorage
                 onLoginSuccess();
             } else if (data?.public?.login?.password?.hasError) {
                 handleLoginError(data.public.login.password.hasError);
@@ -97,11 +97,11 @@ const LoginForm = ({ onLoginSuccess, onRegister, onForgotPassword }) => {
                     <button type="submit" className="login-button">Login</button>
                 </div>
                 <div className="login-options">
-    <Link to="/register">
-        <button type="button" className="registration-button" onClick={onRegister}>Register</button>
-    </Link>
-    <button type="button" className="forgot-password-button" onClick={onForgotPassword}>Forgot Password?</button>
-</div>
+                    <Link to="/register">
+                        <button type="button" className="registration-button" onClick={onRegister}>Register</button>
+                    </Link>
+                    <button type="button" className="forgot-password-button" onClick={onForgotPassword}>Forgot Password?</button>
+                </div>
             </form>
         </div>
     );

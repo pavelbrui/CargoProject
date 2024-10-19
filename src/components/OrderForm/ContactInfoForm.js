@@ -21,24 +21,49 @@ const ContactInfoForm = ({ onSubmit }) => {
     });
 
     const [userEmail, setEmail] = useState('');
+    const [errors, setErrors] = useState({});
 
+    const validateEmail = (email) => {
+        const isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
+        setErrors(prev => ({ ...prev, email: isValid ? '' : 'Invalid email format' }));
+        return isValid;
+    };
+
+    const validatePhone = (phone, addressType) => {
+        const isValid = phone.length > 7 && /^[+0-9]+$/.test(phone);
+        setErrors(prev => ({
+            ...prev,
+            [`${addressType}Phone`]: isValid ? '' : 'Phone must be more then 7 digits'
+        }));
+        return isValid;
+    };
 
     const handleAddressChange = (e, addressType) => {
         const { name, value } = e.target;
         if (addressType === 'from') {
             setFromAddress({ ...fromAddress, [name]: value });
+            if (name === 'phone') validatePhone(value, 'from');
         } else {
             setToAddress({ ...toAddress, [name]: value });
+            if (name === 'phone') validatePhone(value, 'to');
         }
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();  // Prevent page reload
+        e.preventDefault();
+
+        // Validate all fields before submission
+        if (!validateEmail(userEmail) ||
+            !validatePhone(fromAddress.phone, 'from') ||
+            !validatePhone(toAddress.phone, 'to')) {
+            alert('Please correct the errors before submitting.');
+            return;
+        }
 
         onSubmit({
             from: fromAddress,
             to: toAddress,
-            userEmail,  // Przekazanie email
+            userEmail,
         });
     };
 
@@ -52,9 +77,13 @@ const ContactInfoForm = ({ onSubmit }) => {
                         type="email"
                         id="email"
                         value={userEmail}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            validateEmail(e.target.value);
+                        }}
                         required
                     />
+                    {errors.email && <div className="error-message">{errors.email}</div>}
                 </div>
             </fieldset>
 
@@ -92,6 +121,7 @@ const ContactInfoForm = ({ onSubmit }) => {
                         onChange={(e) => handleAddressChange(e, 'from')}
                         required
                     />
+                    {errors.fromPhone && <div className="error-message">{errors.fromPhone}</div>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="fromAddressGoogle">{t.addressGoogle}:</label>
@@ -140,6 +170,7 @@ const ContactInfoForm = ({ onSubmit }) => {
                         onChange={(e) => handleAddressChange(e, 'to')}
                         required
                     />
+                    {errors.toPhone && <div className="error-message">{errors.toPhone}</div>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="toAddressGoogle">{t.addressGoogle}:</label>

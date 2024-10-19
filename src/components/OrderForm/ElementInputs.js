@@ -30,7 +30,7 @@ const ElementInputs = ({ formData, setFormData, t }) => {
     return (
         <div style={formStyles.container}>
             <div>
-                <h3 style={formStyles.subHeader}>{t.dimensions}</h3>
+                {/* <h3 style={formStyles.subHeader}>{t.dimensions}</h3> */}
                 <TransitionGroup>
                     {formData.elements.map((element, index) => (
                         <CSSTransition key={index} timeout={500} classNames="fade">

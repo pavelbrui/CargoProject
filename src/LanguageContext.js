@@ -21,6 +21,8 @@ export const useLanguage = () => {
 
 export const translationsOrderForm = {
     en: {
+        newOrder: 'New Order',
+        myOrders: 'My Orders',
         country: "Country",
         courierService: "Courier Service",
         fromCountry: "From Country",
@@ -94,6 +96,8 @@ export const translationsOrderForm = {
         na: "N/A",
     },
     pl: {
+        newOrder: 'Nowa paczka',
+        myOrders: 'Moi przesylki',
         country: "Kraj",
         fromCountry: "Kraj nadania",
         toCountry: "Kraj odbioru",
@@ -166,6 +170,8 @@ export const translationsOrderForm = {
         na: "Brak danych",
     },
     ru: {
+        newOrder: 'Nowa ',
+        myOrders: 'Moi ',
         country: "Страна",
         fromCountry: "Страна отправления",
         toCountry: "Страна получения",

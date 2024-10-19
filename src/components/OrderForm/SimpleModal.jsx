@@ -12,8 +12,8 @@ const SimpleModal = ({ orderDetails, onClose }) => {
                 <h3>{t.orderDetails}</h3> {/* Translated sub-header */}
                 <p><strong>{t.userEmail}:</strong> {orderDetails?.userEmail}</p>
                 <p><strong>{t.direction}:</strong> {orderDetails?.direction}</p>
-                <p><strong>{t.from}:</strong> {orderDetails.from.fullName}, {orderDetails.from.country}, {orderDetails.from.addressGoogleString}</p>
-                <p><strong>{t.to}:</strong> {orderDetails.to.fullName}, {orderDetails.to.country}, {orderDetails.to.addressGoogleString}</p>
+                <p><strong>{t.from}:</strong> {orderDetails.from.fullName}, {orderDetails.from.addressGoogleString}</p>
+                <p><strong>{t.to}:</strong> {orderDetails.to.fullName}, {orderDetails.to.addressGoogleString}</p>
                 <p><strong>{t.deliveryType}:</strong> {orderDetails.deliveryType}</p>
                 <p><strong>{t.ownerType}:</strong> {orderDetails.ownerType}</p>
                 <p><strong>{t.paymentCurrency}:</strong> {orderDetails.paymentCurrency}</p>

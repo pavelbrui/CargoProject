@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { MY_ORDERS_QUERY } from '../graphql/queries';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage, translationsOrderForm } from '../LanguageContext';
 import './MyOrdersForm.css';
+
 
 const MyOrdersForm = () => {
     const { language } = useLanguage();
     const t = translationsOrderForm[language];  // Get translations for the selected language
 
     const [orders, setOrders] = useState([]);
-    const token = localStorage.getItem('token'); // Get the token from localStorage
+    const token = sessionStorage.getItem('token'); // Get the token from sessionStorage
 
     const [fetchOrders, { loading, error, data }] = useLazyQuery(MY_ORDERS_QUERY, {
         fetchPolicy: 'network-only',
@@ -39,7 +41,13 @@ const MyOrdersForm = () => {
             )
         );
     };
+    const navigate = useNavigate();
+    if(error && !orders.length) {
+       sessionStorage.clear();
+       return navigate('/my_orders')
+    };
 
+    
     return (
         <div className="my-orders-container">
             <h2>{t.myOrdersTitle}</h2>

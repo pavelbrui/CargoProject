@@ -23,3 +23,19 @@ export const REGISTER_USER = gql`
         }
     }
 `;
+
+export const UPDATE_DIRECTION_PRICING = gql`
+  mutation UpdateDirectionPricing($teamId: String!, $_id: String!, $price: PriceForCountryCurrencyInput!) {
+    admin(teamId: $teamId) {
+      updateDirectionPricing(_id: $_id, price: $price) 
+    }
+  }
+`;
+
+export const ADD_NEW_PRICING = gql`
+  mutation AddNewPricing($teamId: String!, $input: PriceForCountryCurrencyInput!) {
+    admin(teamId: $teamId) {
+      newDirectionPricing(input: $input) 
+    }
+  }
+`;

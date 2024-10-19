@@ -2,22 +2,25 @@
     width: 90%;
     margin: 0 auto;
     padding: 30px;
-    background-color: #f4f4f9;
+    background-color: #ffffff;
     border-radius: 15px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-    color: #333;
+    color: #5e2424;
     font-family: 'Arial', sans-serif;
 }
 
 .orders-cards-container {
     display: grid;
+
+    border-radius: 15px;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 20px;
     margin-top: 20px;
 }
 
 .order-card {
-    background-color: #ffffff;
+    background-color: #f8f5f1;
+    border: '2px solid #b88e2f';
     border-radius: 15px;
     padding: 25px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
