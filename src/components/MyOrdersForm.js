@@ -11,7 +11,7 @@ const MyOrdersForm = () => {
     const t = translationsOrderForm[language];  // Get translations for the selected language
 
     const [orders, setOrders] = useState([]);
-    const token = sessionStorage.getItem('token'); // Get the token from sessionStorage
+    const token = localStorage.getItem('token'); // Get the token from localStorage
 
     const [fetchOrders, { loading, error, data }] = useLazyQuery(MY_ORDERS_QUERY, {
         fetchPolicy: 'network-only',
@@ -43,7 +43,7 @@ const MyOrdersForm = () => {
     };
     const navigate = useNavigate();
     if(error && !orders.length) {
-       sessionStorage.clear();
+       localStorage.clear();
        return navigate('/my_orders')
     };
 

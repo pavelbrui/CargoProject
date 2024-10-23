@@ -11,7 +11,7 @@ import { GET_USER_DETAILS } from '../graphql/queries';
   
 
 const AdminDashboard = () => {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   const { data, loading, error } = useQuery(GET_USER_DETAILS, {
     fetchPolicy: 'network-only',
     context: {
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
     if (data && data.user?.me && data.user.me.teams.length > 0) {
       
       const firstTeamId = data.user.me.teams[0];
-      sessionStorage.setItem('currentTeamId', firstTeamId);
+      localStorage.setItem('currentTeamId', firstTeamId);
     }
   }, [data]);
 

@@ -20,9 +20,15 @@ export const MY_ORDERS_QUERY = gql`
         direction
         from {
           addressGoogleString
+          flat
+          phone
+          fullName
         }
         to {
           addressGoogleString
+          flat
+          phone
+          fullName
         }
         deliveryType
         ownerType
@@ -81,9 +87,9 @@ export const GET_USER_DETAILS = gql`
 
 
 export const GET_PRICINGS = gql`
-  query GetPricings($direction: String, $paymentCurrency: CountryCurrency, $teamId: String!) {
+  query GetPricings($direction: String, $paymentCurrency: CountryCurrency, $ownerType: OwnerType, $teamId: String!) {
     admin(teamId: $teamId) {
-      getPricings(direction: $direction, paymentCurrency: $paymentCurrency) {
+      getPricings(direction: $direction, paymentCurrency: $paymentCurrency, ownerType: $ownerType) {
         _id
         ownerType
         direction
@@ -110,4 +116,66 @@ query GetEnumValues($enumName: String!) {
     }
   }
 }
-`  
+`
+
+
+export const GET_ORDERS = gql`
+  query GetOrders(
+    $teamId: String!, 
+    $sort: SortOrdersInput, 
+    $fieldFilter: AdminOrderFilter, 
+    $dateFilter: PeriodInput, 
+    $paginate: PageOptions
+  ) {
+    admin(teamId: $teamId) {
+      orders(
+        sort: $sort
+        fieldFilter: $fieldFilter
+        dateFilter: $dateFilter
+        paginate: $paginate
+      ) {
+        cursorId
+        objects {
+         _id
+        clientId
+        direction
+        from {
+          addressGoogleString
+          flat
+          phone
+        }
+        to {
+          addressGoogleString
+          flat
+          phone
+        }
+        deliveryType
+        ownerType
+        paymentCurrency
+        totalPrice
+        elements {
+          length
+          width
+          height
+          weight
+          description
+        }
+        fromDoor
+        toDoor
+        paid
+        status
+        createdAt
+        updatedAt
+        }
+      }
+    }
+  }
+`;
+
+
+
+
+
+
+
+

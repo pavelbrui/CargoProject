@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-do
 import './index.css';
 import Home from './pages/Home';
 import MyOrders from './pages/MyOrders';
-import Register from './admin/AdminDashboard';
+import Register from './components/RegistrationForm';
 import { useLanguage, translationsOrderForm } from './LanguageContext'; 
 import AdminDashboard from './admin/AdminDashboard';
 
@@ -29,41 +29,48 @@ function App() {
 
     return (
         <Router>
-            <header className="app-header">
-                <nav>
-                    <ul className="nav-list">
-                        <li className="nav-item a">PL-CARGO</li>
-                        <li className="nav-item">
-                            <NavLink
-                                to="/"
-                                className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-                            >
-                                {t.newOrder}
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink
-                                to="/my_orders"
-                                className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-                            >
-                                {t.myOrders}
-                            </NavLink>
-                        </li>
-                        {/* Uncomment the line below if you need the Register link */}
-                        {/* <li className="nav-item"><NavLink to="/register" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>Register</NavLink></li> */}
-                    </ul>
-                </nav>
-                <LanguageSelector />
-            </header>
+            <Routes>
+                <Route path="/admins/*" element={<AdminDashboard fullScreen />} />
+                <Route
+                    path="*"
+                    element={
+                        <>
+                            <header className="app-header">
+                                <nav>
+                                    <ul className="nav-list">
+                                        <li className="nav-item a">PL-CARGO</li>
+                                        <li className="nav-item">
+                                            <NavLink
+                                                to="/"
+                                                className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+                                            >
+                                                {t.newOrder}
+                                            </NavLink>
+                                        </li>
+                                        <li className="nav-item">
+                                            <NavLink
+                                                to="/my_orders"
+                                                className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+                                            >
+                                                {t.myOrders}
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <LanguageSelector />
+                            </header>
 
-            <main>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/my_orders" element={<MyOrders />} />
-                    <Route path="/register" element={<Register />} /> 
-                    <Route path="/admins/*" element={<AdminDashboard />} />
-                </Routes>
-            </main>
+                            <main>
+                                <Routes>
+                                    <Route path="/" element={<Home />} />
+                                    <Route path="/my_orders" element={<MyOrders />} />
+                                    <Route path="/register" element={<Register />} />
+                                </Routes>
+                            </main>
+                        </>
+                    }
+                />
+            </Routes>
         </Router>
     );
 }

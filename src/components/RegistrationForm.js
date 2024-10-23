@@ -3,14 +3,18 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { REGISTER_USER } from '../graphql/mutations';
 import './RegistrationForm.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const RegistrationForm = () => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
+        confirmPassword: '',
         country: 'PL'
     });
     const [errorMessage, setErrorMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [registerUser] = useMutation(REGISTER_USER);
 
     const handleChange = (e) => {
@@ -23,8 +27,12 @@ const RegistrationForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (formData.password !== formData.confirmPassword) {
+            setErrorMessage('Passwords do not match.');
+            return;
+        }
         try {
-            const { data } = await registerUser({ variables: { user: {...formData} } });
+            const { data } = await registerUser({ variables: { user: { ...formData } } });
             if (data?.public?.register?.registered) {
                 alert('Registration successful!');
             } else if (data?.public?.register?.hasError) {
@@ -57,6 +65,14 @@ const RegistrationForm = () => {
         }
     };
 
+    const toggleShowPassword = () => {
+        setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
+
+    const toggleShowConfirmPassword = () => {
+        setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
+    };
+
     return (
         <div className="registration-container">
             <form className="registration-form" onSubmit={handleSubmit}>
@@ -75,14 +91,41 @@ const RegistrationForm = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
+                    <div className="password-input-container">
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            id="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                        <span
+                            className="show-password-icon"
+                            onClick={toggleShowPassword}
+                        >
+                            <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                        </span>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="confirmPassword">Confirm Password:</label>
+                    <div className="password-input-container">
+                        <input
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            required
+                        />
+                        <span
+                            className="show-password-icon"
+                            onClick={toggleShowConfirmPassword}
+                        >
+                            <i className={showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                        </span>
+                    </div>
                 </div>
                 <button type="submit" className="register-button">Register</button>
             </form>

@@ -1,3 +1,4 @@
+// src/components/PricingManagement.js
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_PRICINGS, GET_ENUM } from '../graphql/queries';
@@ -15,16 +16,19 @@ const PricingManagement = () => {
     from: '',
     to: '',
     paymentCurrency: 'USD',
-    priceTypes: [{ deliveryType: 'AIR', priceForKg: 0 }],
+    ownerType: 'BISNES',
+    priceTypes: [{ deliveryType: 'AIR', priceForKg: 0, minPrice: 0 }],
+    courierMinPrice: 0,
     courierKgToHome: 0,
     courierKgFromHome: 0,
   });
-
   const [editingPricing, setEditingPricing] = useState(null);
   const [filterText, setFilterText] = useState('');
+  const [filterOwnerType, setFilterOwnerType] = useState('');
+  const [filterPaymentCurrency, setFilterPaymentCurrency] = useState('');
 
-  const teamId = sessionStorage.getItem('currentTeamId');
-  const token = sessionStorage.getItem('token');
+  const teamId = localStorage.getItem('currentTeamId');
+  const token = localStorage.getItem('token');
 
   // Queries
   const { data: countryEnums, loading: loadingCountries, error: errorCountries } = useQuery(GET_ENUM, {
@@ -36,13 +40,13 @@ const PricingManagement = () => {
 
   const { data, loading, error, refetch } = useQuery(GET_PRICINGS, {
     variables: { teamId },
-    context: { headers: { Authorization: token } },
+    context: { headers: { Authorization: `${token}` } },
     fetchPolicy: 'network-only',
   });
 
   // Mutations
   const [updatePricing] = useMutation(UPDATE_DIRECTION_PRICING, {
-    context: { headers: { Authorization: token } },
+    context: { headers: { Authorization: `${token}` } },
     onCompleted: () => {
       setIsEditing(false);
       refetch();
@@ -50,7 +54,7 @@ const PricingManagement = () => {
   });
 
   const [addPricing] = useMutation(ADD_NEW_PRICING, {
-    context: { headers: { Authorization: token } },
+    context: { headers: { Authorization: `${token}` } },
     onCompleted: () => {
       setIsAddingNew(false);
       refetch();
@@ -82,7 +86,9 @@ const PricingManagement = () => {
     const input = {
       direction: `${editingPricing.from}_${editingPricing.to}`,
       paymentCurrency: editingPricing.paymentCurrency,
+      ownerType: editingPricing.ownerType,
       priceTypes: editingPricing.priceTypes?.map(({ __typename, ...rest }) => rest),
+      courierMinPrice: editingPricing.courierMinPrice,
       courierKgToHome: editingPricing.courierKgToHome,
       courierKgFromHome: editingPricing.courierKgFromHome,
     };
@@ -131,7 +137,7 @@ const PricingManagement = () => {
   const addNewPriceType = () => {
     setNewPricing((prev) => ({
       ...prev,
-      priceTypes: [...prev.priceTypes, { deliveryType: 'AIR', priceForKg: 0 }],
+      priceTypes: [...prev.priceTypes, { deliveryType: 'AIR', priceForKg: 0, minPrice: 0 }],
     }));
   };
 
@@ -139,7 +145,9 @@ const PricingManagement = () => {
     const input = {
       direction: `${newPricing.from}_${newPricing.to}`,
       paymentCurrency: newPricing.paymentCurrency,
+      ownerType: newPricing.ownerType,
       priceTypes: newPricing.priceTypes,
+      courierMinPrice: newPricing.courierMinPrice,
       courierKgToHome: newPricing.courierKgToHome,
       courierKgFromHome: newPricing.courierKgFromHome,
     };
@@ -149,7 +157,10 @@ const PricingManagement = () => {
 
   const filteredPricingData = pricingData.filter((pricing) => {
     if (!pricing || !pricing.direction) return false;
-    return filterText ? pricing.direction.includes(filterText) : true;
+    const matchesFilterText = filterText ? pricing.direction.includes(filterText) : true;
+    const matchesOwnerType = filterOwnerType ? pricing.ownerType === filterOwnerType : true;
+    const matchesPaymentCurrency = filterPaymentCurrency ? pricing.paymentCurrency === filterPaymentCurrency : true;
+    return matchesFilterText && matchesOwnerType && matchesPaymentCurrency;
   });
 
   if (loading || loadingCountries || loadingCurrencies) return <p>Loading...</p>;
@@ -167,6 +178,23 @@ const PricingManagement = () => {
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
         />
+        <select
+          value={filterOwnerType}
+          onChange={(e) => setFilterOwnerType(e.target.value)}
+        >
+          <option value="">Filter by Owner Type</option>
+          <option value="BISNES">BISNES</option>
+          <option value="PRIVAT">PRIVAT</option>
+        </select>
+        <select
+          value={filterPaymentCurrency}
+          onChange={(e) => setFilterPaymentCurrency(e.target.value)}
+        >
+          <option value="">Filter by Payment Currency</option>
+          {currencyEnums?.__type?.enumValues?.map(({ name }) => (
+            <option key={name} value={name}>{name}</option>
+          ))}
+        </select>
       </div>
 
       {/* Pricing Table */}
@@ -175,6 +203,8 @@ const PricingManagement = () => {
           <tr>
             <th>Direction</th>
             <th>Payment Currency</th>
+            <th>Owner Type</th>
+            <th>Courier Min Price</th>
             <th>Courier Kg To Home</th>
             <th>Courier Kg From Home</th>
             <th>Delivery Types & Prices</th>
@@ -186,13 +216,15 @@ const PricingManagement = () => {
             <tr key={pricing._id}>
               <td>{pricing.direction}</td>
               <td>{pricing.paymentCurrency}</td>
+              <td>{pricing.ownerType}</td>
+              <td>{pricing.courierMinPrice}</td>
               <td>{pricing.courierKgToHome}</td>
               <td>{pricing.courierKgFromHome}</td>
               <td>
                 {pricing.priceTypes?.map((type, typeIndex) => (
                   type && (
                     <div key={typeIndex}>
-                      {type.deliveryType}: Price per Kg: {type.priceForKg}
+                      {type.deliveryType}: Min Price: {type.minPrice}, Price per Kg: {type.priceForKg}
                     </div>
                   )
                 ))}

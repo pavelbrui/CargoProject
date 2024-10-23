@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { LOGIN_USER } from '../graphql/queries';
 import './LoginForm.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const LoginForm = ({ onLoginSuccess, onRegister, onForgotPassword }) => {
     const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const LoginForm = ({ onLoginSuccess, onRegister, onForgotPassword }) => {
         password: '',
     });
     const [error, setError] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const [loginUser] = useLazyQuery(LOGIN_USER);
 
@@ -27,10 +29,10 @@ const LoginForm = ({ onLoginSuccess, onRegister, onForgotPassword }) => {
         setError(null); // Clear previous errors
 
         try {
-            const { data } = await loginUser({ variables: { user: formData } });
+            const { data } = await loginUser({ variables: { user: { ...formData, username: formData.username.toLowerCase() } } });
             if (data?.public?.login?.password?.accessToken) {
                 const accessToken = data.public.login.password.accessToken;
-                sessionStorage.setItem('token', accessToken); // Using sessionStorage instead of localStorage
+                localStorage.setItem('token', accessToken); // Using localStorage instead of localStorage
                 onLoginSuccess();
             } else if (data?.public?.login?.password?.hasError) {
                 handleLoginError(data.public.login.password.hasError);
@@ -66,6 +68,10 @@ const LoginForm = ({ onLoginSuccess, onRegister, onForgotPassword }) => {
         }
     };
 
+    const toggleShowPassword = () => {
+        setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
+
     return (
         <div className="login-container">
             <form className="login-form" onSubmit={handleSubmit}>
@@ -84,14 +90,22 @@ const LoginForm = ({ onLoginSuccess, onRegister, onForgotPassword }) => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
+                    <div className="password-input-container">
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            id="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                        <span
+                            className="show-password-icon"
+                            onClick={toggleShowPassword}
+                        >
+                            <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                        </span>
+                    </div>
                 </div>
                 <div className="button-container">
                     <button type="submit" className="login-button">Login</button>

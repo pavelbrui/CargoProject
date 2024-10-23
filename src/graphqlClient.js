@@ -6,8 +6,7 @@ const client = new ApolloClient({
 });
 
 // Dodaj definicje typów
-const typeDefs = gql`
-    type Query{
+const typeDefs = gql`type Query{
 	"""
 	Retrieves user-related queries.
 	"""
@@ -78,6 +77,7 @@ type PublicMutation{
 		"""
 		verifyData: VerifyEmailInput!
 	): VerifyEmailResponse!
+    sendOrder(input: SendOrderPublicInput!): String
 }
 
 """
@@ -123,7 +123,7 @@ type AdminMutation{
 
 	updateDirectionPricing(
 		_id:  String!
-		price: PriceForCountryCurrencyInput
+		price: UpdatePriceForCountryCurrencyInput
 	): Boolean
 
 	newDirectionPricing(
@@ -139,14 +139,11 @@ type AdminMutation{
 	): RemoveUserFromTeamResponse!
 }
 
-type CountryPairsPrices{
-	countryPair: CountryPairs
-	pricesForCountries: [PriceForCountryCurrency!]
-}
-
 type PriceForCountryCurrency{
-	direction: CountryPairs
-    paymentFrom: CountryCurrency
+	ownerType:  OwnerType
+	_id:String!
+	direction: String!
+    paymentCurrency: CountryCurrency!
 	priceTypes:  [PriceForDeliveryType]
 	courierMinPrice:Float
 	courierKgToHome:Float
@@ -155,17 +152,29 @@ type PriceForCountryCurrency{
 }
 
 input PriceForCountryCurrencyInput{
-	direction: CountryPairs
-	paymentFrom: CountryCurrency
+	ownerType:  OwnerType
+	direction:  String!
+	paymentCurrency: CountryCurrency!
 	priceTypes:  [PriceForDeliveryTypeInput]
+	courierMinPrice:Float
+	courierKgToHome:Float
+	courierKgFromHome:Float
+}
+
+input UpdatePriceForCountryCurrencyInput{
+	ownerType:  OwnerType
+	direction:  String
+	paymentCurrency: CountryCurrency
+	priceTypes:  [PriceForDeliveryTypeInput]
+	courierMinPrice:Float
 	courierKgToHome:Float
 	courierKgFromHome:Float
 }
 
 
-
 input PriceForDeliveryTypeInput{
 	deliveryType:  DeliveryType
+	minPrice: Float
 	priceForKg: Float
 }
 
@@ -176,16 +185,6 @@ type PriceForDeliveryType{
 	priceForKg: Float
 }
 
-
-
-enum CountryPairs{
-	USA_RU
-	USA_PL
-	CAN_PL
-	CAN_BY
-	CAN_RU
-	USA_BY
-}
 
 
 input ProviderLoginInput{
@@ -255,7 +254,8 @@ type UserQuery{
 	calculateMyOrder(
 		input: CalculateOrderInput
 	): Int
-	myOrders: [DraftOrder!]
+	myOrders(input: OrderFilter) :
+	[DraftOrder!]
 	myDrafts: [DraftOrder!]
 	orderDetails(
 		_id: String!
@@ -263,10 +263,10 @@ type UserQuery{
 }
 
 input CalculateOrderInput{
-	direction: CountryPairs
-	paymentFrom: CountryCurrency
-	deliveryType: DeliveryType
-	ownerType: OwnerType
+	direction: String!
+	paymentCurrency: CountryCurrency!
+	deliveryType: DeliveryType!
+	ownerType: OwnerType!
 	elements: [DimensionInput!]!
 	fromDoor: Boolean
 	toDoor: Boolean
@@ -331,19 +331,33 @@ type AdminQuery{
 	    sort: SortOrdersInput
 	): PaginatedOrders
 	getPricings(
-		direction: CountryPairs
-	    paymentFrom: CountryCurrency): [PriceForCountryCurrency!]
+		ownerType: OwnerType
+		direction:  String
+	    paymentCurrency: CountryCurrency): [PriceForCountryCurrency!]
 }
 
 
 
-enum CountryCurrency{
-	USD
-	PLN
-	BYR
-	RUB
+enum CountryCurrency {
+    USD,  
+    PLN, 
+    BYR, 
+    RUB,  
+    EUR,  
+    GBP,  # Funt brytyjski
+    JPY,  # Jen japoński
+    CNY,  # Juan chiński
+    AUD,  # Dolar australijski
+    CAD,  # Dolar kanadyjski
+    CHF,  # Frank szwajcarski
+    SEK,  # Korona szwedzka
+    NOK,  # Korona norweska
+    MXN,  # Peso meksykańskie
+    INR,  # Rupia indyjska
+    BRL,  # Real brazylijski
+    ZAR,  # Rand południowoafrykański
+    KRW,  # Won południowokoreański
 }
-
 
 type User implements Node{
 	_id: String!
@@ -384,8 +398,8 @@ interface Node{
 type Order{
 	_id: String!
 	clientId: String!
-	direction: CountryPairs!
-	paymentFrom: CountryCurrency!
+	direction:  String!
+	paymentCurrency: CountryCurrency!
 	from: Address!
 	to: Address!
 	deliveryType: DeliveryType!
@@ -397,17 +411,20 @@ type Order{
 	fromDoor: Boolean
 	paid: Boolean
 	toDoor: Boolean
+	status: OrderStatus
+	createdAt: String!
+	updatedAt:  String
 }
 
 type DraftOrder{
 	_id: String!
 	clientId: String!
-	direction: CountryPairs
-	paymentFrom: CountryCurrency
+	direction:  String
 	from: Address
 	to: Address
 	deliveryType: DeliveryType
 	ownerType: OwnerType
+    paymentCurrency: CountryCurrency
 	totalPrice: Int
 	elements: [Dimension!]
 	description: String
@@ -415,6 +432,9 @@ type DraftOrder{
 	fromDoor: Boolean
 	toDoor: Boolean
 	paid: Boolean
+	status: OrderStatus
+	createdAt: String!
+	updatedAt:  String
 }
 
 type Dimension{
@@ -445,20 +465,86 @@ enum DeliveryType{
 }
 
 type Address{
+	fullName:  String!
 	country: Country!
 	flat: String
 	phone: String!
 	addressGoogleString: String!
-	person: User!
 }
 
-enum Country{
-	USA
-	BY
-	RU
-	PL
-	CAN
+enum Country {
+    USA,    # Stany Zjednoczone
+    BY,     # Białoruś
+    RU,     # Rosja
+    PL,     # Polska
+    CAN,    # Kanada
+    IL,     # Izrael
+    DE,     # Niemcy
+    FR,     # Francja
+    UK,     # Wielka Brytania
+    JP,     # Japonia
+    CN,     # Chiny
+    IN,     # Indie
+    AU,     # Australia
+    BR,     # Brazylia
+    ZA,     # Republika Południowej Afryki
+    MX,     # Meksyk
+    IT,     # Włochy
+    ES,     # Hiszpania
+    SE,     # Szwecja
+    NO,     # Norwegia
+    KR,     # Korea Południowa
+    NL,     # Holandia
+    CH,     # Szwajcaria
+    AT,     # Austria
+    GR,     # Grecja
+    TR,     # Turcja
+    SA,     # Arabia Saudyjska
+    NZ,     # Nowa Zelandia
+    AR,     # Argentyna
+    EG,     # Egipt
+    PT,     # Portugalia
+    FI,     # Finlandia
+    DK,     # Dania
+    UA,     # Ukraina
+    HU,     # Węgry
+    BE,     # Belgia
+    CZ,     # Czechy
+    SK,     # Słowacja
+    IE,     # Irlandia
+    RO,     # Rumunia
+    AE,     # Zjednoczone Emiraty Arabskie
+    MY,     # Malezja
+    SG,     # Singapur
+    TH,     # Tajlandia
+    VN,     # Wietnam
+    PH,     # Filipiny
+    IS,     # Islandia
+    LI,     # Liechtenstein
+    LU,     # Luksemburg
+    MT,     # Malta
+    MC,     # Monako
+    AD,     # Andora
+    AL,     # Albania
+    BA,     # Bośnia i Hercegowina
+    BG,     # Bułgaria
+    HR,     # Chorwacja
+    CY,     # Cypr
+    EE,     # Estonia
+    LV,     # Łotwa
+    LT,     # Litwa
+    MD,     # Mołdawia
+    MK,     # Macedonia Północna
+    RS,     # Serbia
+    SI,     # Słowenia
+    XK,     # Kosowo
+    SM,     # San Marino
+    VA,     # Watykan
+    GE,     # Gruzja (chociaż jest częściowo w Azji, często związana z Europą)
+    AM,     # Armenia (również częściowo w Azji, kulturowo powiązana z Europą)
 }
+
+
 
 type OrderOps{
 	delete: Boolean!
@@ -484,9 +570,8 @@ input UpdateOrderInput{
 	to: AddressAddInput
 	deliveryType: DeliveryType
 	ownerType: OwnerType
-	totalPrice: Int!
-	addElements: [DimensionInput!]
-	removeElement: Int
+	totalPrice: Int
+	elements: [DimensionInput!]
 	fromDoor: Boolean
 	toDoor: Boolean
 }
@@ -526,10 +611,12 @@ enum OrderStatus{
 }
 
 input DraftOrderInput{
+	direction:  String
 	from: AddressAddInput
 	to: AddressAddInput
 	deliveryType: DeliveryType
 	ownerType: OwnerType
+    paymentCurrency:   CountryCurrency
 	totalPrice: Int
 	elements: [DimensionInput]
 	fromDoor: Boolean
@@ -537,10 +624,26 @@ input DraftOrderInput{
 }
 
 input SendOrderInput{
+	direction:  String!
 	from: AddressAddInput!
 	to: AddressAddInput!
 	deliveryType: DeliveryType!
 	ownerType: OwnerType!
+    paymentCurrency:   CountryCurrency!
+	totalPrice: Int!
+	elements: [DimensionInput!]!
+	fromDoor: Boolean
+	toDoor: Boolean
+}
+
+input SendOrderPublicInput{
+    userEmail:  String!
+	direction: String!
+	from: AddressAddInput!
+	to: AddressAddInput!
+	deliveryType: DeliveryType!
+	ownerType: OwnerType!
+    paymentCurrency:   CountryCurrency!
 	totalPrice: Int!
 	elements: [DimensionInput!]!
 	fromDoor: Boolean
@@ -553,6 +656,7 @@ input  CreateOrderAdminInput{
 	to: AddressAddInput!
 	deliveryType: DeliveryType!
 	ownerType: OwnerType!
+    paymentCurrency:   CountryCurrency!
 	totalPrice: Int!
 	elements: [DimensionInput!]!
 	fromDoor: Boolean
@@ -561,8 +665,10 @@ input  CreateOrderAdminInput{
 
 
 input AddressAddInput{
+    fullName:  String!
+	country:  Country!
 	flat: String
-	phone: String
+	phone: String!
 	addressGoogleString: String!
 }
 
@@ -589,6 +695,7 @@ enum SortField{
 	CREATED_AT
 	UPDATED_AT
 	STATUS
+    PAYMENT_CURRENCY
 	DIRECTION
 	DELIVERY_TYPE
 	TOTAL_PRICE
@@ -652,12 +759,12 @@ input PageOptions{
 input AdminOrderFilter{
 	clientId: String
 	searchString: String
-	paymentFrom: CountryCurrency
+	paymentCurrency: CountryCurrency
 	
 	status: [OrderStatus!]
 	paid: Boolean
 
-	direction: [CountryPairs]
+	direction: [String]
 	
 	deliveryType: DeliveryType
 	ownerType: OwnerType
@@ -673,28 +780,10 @@ input OrderFilter{
 	paginate: PageOptions
 	sort: SortOrdersInput
 	status: [OrderStatus!]
-	paid: Boolean
+	paid: Boolean	
+	totalPrice: Int
 }
 
-type OrderInvoice{
-	address: Address!
-	cardCommission: Int
-	"""
-	Number to the client
-	"""
-	clientPhoneNumber: String
-	createdAt: Date!
-	"""
-	price for the delivery paid by restaurant to the tenant
-	"""
-	deliveryPrice: Int!
-	id: String
-	invoiceId: String
-	orderId: String!
-	pay: Boolean
-	restaurant: String
-	total: Int!
-}
 
 scalar Date
 
