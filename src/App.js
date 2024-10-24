@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import './index.css';
+import './App.css';
 import Home from './pages/Home';
 import MyOrders from './pages/MyOrders';
 import Register from './components/RegistrationForm';

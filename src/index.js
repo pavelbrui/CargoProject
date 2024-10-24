@@ -1,18 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+
+import './App.css';
+import React from 'react'; 
 import App from './App';
 import client from './apolloClient';
 import { ApolloProvider } from '@apollo/client';
 import { LanguageProvider } from './LanguageContext';
+import { createRoot } from 'react-dom/client';
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
   <ApolloProvider client={client}>
-    <React.StrictMode>
-      <LanguageProvider>
-    <App />
+    <LanguageProvider>
+      <App />
     </LanguageProvider>
-    </React.StrictMode>
-  </ApolloProvider>,
-  document.getElementById('root')
+  </ApolloProvider>
 );

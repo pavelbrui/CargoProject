@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tooltip } from 'react-tooltip';
 
 const DeliveryOptions = ({ formData, setFormData, t }) => {
@@ -25,13 +25,23 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
         }));
     };
 
+    useEffect(() => {
+        // Disconnect ResizeObserver on unmount to prevent loop error
+        return () => {
+            if (window.ResizeObserver) {
+                const allObservers = document.querySelectorAll('[data-tooltip-id]');
+                allObservers.forEach(observer => observer.disconnect && observer.disconnect());
+            }
+        };
+    }, []);
+
     return (
         <fieldset style={formStyles.fieldset}>
             <legend style={formStyles.legend}>{t.deliveryInformation}</legend>
 
             {/* Direction row for 'from' and 'to' countries */}
-            <div style={formStyles.directionRowCloseAligned}>
-                <div style={formStyles.fieldGroupSmall}>
+            <div style={formStyles.directionRowGrid}>
+                <div style={formStyles.fieldGroupSmallCentered}>
                     <label htmlFor="fromCountry" style={formStyles.labelBlack} data-tooltip-id="from-country-tooltip" data-tooltip-content={t.fromCountryTooltip}>
                         {t.fromCountry}
                     </label>
@@ -40,8 +50,7 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         name="fromCountry"
                         value={formData.fromCountry}
                         onChange={handleChange}
-                        style={formStyles.select}
-                        aria-describedby="from-country-tooltip"
+                        style={formStyles.selectCompact}
                         required
                     >
                         <option value="USA">{t.usa}</option>
@@ -51,12 +60,12 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         <option value="RU">{t.russia}</option>
                         <option value="IL">{t.israel}</option>
                     </select>
-                    <Tooltip anchorId="fromCountry" place="top" effect="solid" />
+                    <Tooltip anchorSelect="[data-tooltip-id='from-country-tooltip']" place="top" effect="solid" observe={false} />
                 </div>
 
                 <button onClick={handleReverse} style={formStyles.reverseButton}>&#8596;</button>
 
-                <div style={formStyles.fieldGroupSmall}>
+                <div style={formStyles.fieldGroupSmallCentered}>
                     <label htmlFor="toCountry" style={formStyles.labelBlack} data-tooltip-id="to-country-tooltip" data-tooltip-content={t.toCountryTooltip}>
                         {t.toCountry}
                     </label>
@@ -65,8 +74,7 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         name="toCountry"
                         value={formData.toCountry}
                         onChange={handleChange}
-                        style={formStyles.select}
-                        aria-describedby="to-country-tooltip"
+                        style={formStyles.selectCompact}
                         required
                     >
                         <option value="PL">{t.poland}</option>
@@ -76,7 +84,7 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         <option value="RU">{t.russia}</option>
                         <option value="IL">{t.israel}</option>
                     </select>
-                    <Tooltip anchorId="toCountry" place="top" effect="solid" />
+                    <Tooltip anchorSelect="[data-tooltip-id='to-country-tooltip']" place="top" effect="solid" observe={false} />
                 </div>
             </div>
 
@@ -93,13 +101,12 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                             value={formData.ownerType}
                             onChange={handleChange}
                             style={formStyles.select}
-                            aria-describedby="owner-type-tooltip"
                             required
                         >
                             <option value="PRIVAT">{t.privateOwner}</option>
                             <option value="BISNES">{t.businessOwner}</option>
                         </select>
-                        <Tooltip anchorId="ownerType" place="top" effect="solid" />
+                        <Tooltip anchorSelect="[data-tooltip-id='owner-type-tooltip']" place="top" effect="solid" observe={false} />
                     </div>
 
                     <div style={formStyles.fieldGroupInline}>
@@ -112,14 +119,13 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                             value={formData.deliveryType}
                             onChange={handleChange}
                             style={formStyles.select}
-                            aria-describedby="delivery-type-tooltip"
                             required
                         >
                             <option value="AIR">{t.airDelivery}</option>
                             <option value="SEA">{t.seaDelivery}</option>
                             <option value="TRAIN">{t.trainDelivery}</option>
                         </select>
-                        <Tooltip anchorId="deliveryType" place="top" effect="solid" />
+                        <Tooltip anchorSelect="[data-tooltip-id='delivery-type-tooltip']" place="top" effect="solid" observe={false} />
                     </div>
 
                     <div style={formStyles.fieldGroupInline}>
@@ -132,7 +138,6 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                             value={formData.paymentCurrency}
                             onChange={handleChange}
                             style={formStyles.select}
-                            aria-describedby="payment-currency-tooltip"
                             required
                         >
                             <option value="PLN">{t.poland}</option>
@@ -142,11 +147,12 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         </select>
                     </div>
                 </div>
-                <Tooltip anchorId="paymentCurrency" place="top" effect="solid" />
+                <Tooltip anchorSelect="[data-tooltip-id='payment-currency-tooltip']" place="top" effect="solid" observe={false} />
 
                 <div style={formStyles.checkboxesRowInlineAlignedCenteredContainer}>
                     <div style={formStyles.checkboxesRowInlineAlignedCentered}>
-                        <label style={formStyles.labelBlack}>{t.courierService}:</label>
+                        <label style={formStyles.labelBlack} data-tooltip-id="courier-service-tooltip" data-tooltip-content={t.courierServiceTooltip}>{t.courierService}:</label>
+                        <Tooltip anchorSelect="[data-tooltip-id='courier-service-tooltip']" place="top" effect="solid" observe={false} />
                         <div style={formStyles.checkboxGroupInlineAlignedCentered}>
                             <input
                                 type="checkbox"
@@ -183,74 +189,35 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
 
 export default DeliveryOptions;
 
-
-
 const formStyles = {
     fieldset: {
-        //border: '1px solid #b88e2f',
-        //padding: '25px',
-        //marginBottom: '25px',
         borderRadius: '12px',
-       // backgroundColor: '#fff',
-       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
     },
     legend: {
         fontSize: '22px',
         fontWeight: 'bold',
-        //color: '#b88e2f',
         padding: '0 10px',
     },
-    directionRowCloseAligned: {
-        display: 'flex',
-        justifyContent: 'space-between',
+    directionRowGrid: {
+        display: 'grid',
+        gridTemplateColumns: '1fr auto 1fr',
         alignItems: 'center',
-        marginBottom: '20px',
-        gap: '5px',
-    },
-    fieldGroupSmall: {
-        width: '45%',
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    cardBlockCombinedAligned: {
-        border: '1px solid #b88e2f',
-        padding: '20px',
-        borderRadius: '10px',
-        marginBottom: '20px',
-       // backgroundColor: '#f8f5f1',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    },
-    fieldRowCombinedAligned: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: '15px',
-        marginBottom: '15px',
-    },
-    row: {
-        display: 'flex',
-        flexDirection: 'column',
+        gap: '10px',
         marginBottom: '20px',
     },
-    label: {
-        fontSize: '16px',
-        fontWeight: '600',
-        color: '#b60d0d',
-        marginBottom: '8px',
+    fieldGroupSmallCentered: {
+        textAlign: 'center',
     },
-    labelBlack: {
-        fontSize: '16px',
-        fontWeight: '600',
-        color: '#333',
-        marginBottom: '8px',
-    },
-    select: {
-        width: '100%',
+    selectCompact: {
+        width: '70%',
         padding: '12px',
         borderRadius: '8px',
+        //border: '1px solid #b88e2f',
         border: '1px solid #ccc',
-        boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
+        boxShadow: 'inset 0 4px 12px rgba(0, 0, 0, 0.1)',
         transition: 'border 0.3s ease',
+        margin: '0 auto',
     },
     reverseButton: {
         padding: '8px 12px',
@@ -260,10 +227,38 @@ const formStyles = {
         borderRadius: '8px',
         cursor: 'pointer',
         transition: 'background-color 0.3s ease',
-        alignSelf: 'center',
-        marginTop: '25px',
         border: '1px solid #ccc',
         boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
+        alignSelf: 'center',
+        marginTop: '25px',
+    },
+    cardBlockCombinedAligned: {
+        border: '1px solid #b88e2f',
+        padding: '20px',
+        borderRadius: '10px',
+        marginBottom: '20px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    },
+    fieldRowCombinedAligned: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: '15px',
+        marginBottom: '15px',
+    },
+    labelBlack: {
+        fontSize: '16px',
+        fontWeight: '600',
+        color: '#333',
+        marginBottom: '8px',
+    },
+    select: {
+        width: '100%',
+        padding: '10px',
+        borderRadius: '8px',
+        border: '1px solid #ccc',
+        boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
+        transition: 'border 0.3s ease',
     },
     checkbox: {
         marginRight: '10px',
@@ -273,27 +268,6 @@ const formStyles = {
         fontSize: '16px',
         fontWeight: '500',
         color: '#333',
-    },
-    header: {
-        textAlign: 'center',
-        fontSize: '20px',
-        fontWeight: 'bold',
-        color: '#b60d0d',
-        backgroundColor: '#f8f5f1',
-        padding: '10px',
-        borderRadius: '8px',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-        marginBottom: '15px',
-    },
-    headerSmall: {
-        textAlign: 'center',
-        fontSize: '16px',
-        fontWeight: 'bold',
-        color: '#333',
-        backgroundColor: '#f8f5f1',
-        padding: '2px',
-        borderRadius: '2px',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
     },
     checkboxesRowInlineAlignedCenteredContainer: {
         display: 'flex',
