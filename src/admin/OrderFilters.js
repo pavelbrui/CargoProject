@@ -1,4 +1,3 @@
-// src/components/OrderFilters.js
 import React from 'react';
 import './OrderFilters.css';
 
@@ -27,67 +26,74 @@ const OrderFilters = ({
 }) => {
   return (
     <div className="filter-container">
-      <label>
-        From Country:
-        <select value={fromCountry} onChange={(e) => setFromCountry(e.target.value)} className="select-field">
-          <option value="">Select Country</option>
-          {countryEnums?.__type?.enumValues?.map(({ name }) => (
-            <option key={name} value={name}>{name}</option>
-          ))}
-        </select>
-      </label>
+      <div className="field-group-small-centered">
+        <label>
+          From:
+          <select value={fromCountry} onChange={(e) => setFromCountry(e.target.value)} className="select-field">
+            <option value="">Select</option>
+            {countryEnums?.__type?.enumValues?.map(({ name }) => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+          </select>
+        </label>
+        <label className="checkbox-group-under-select">
+          From door:
+          <input
+            type="checkbox"
+            checked={fromDoor}
+            onChange={(e) => setFromDoor(e.target.checked ? 'true' : '')}
+            className="checkbox-field"
+          />
+        </label>
+      </div>
+      
       <button className="swap-countries-button" onClick={handleSwapCountries}>
         ↔
       </button>
+      
+      <div className="field-group-small-centered">
+        <label>
+          To:
+          <select value={toCountry} onChange={(e) => setToCountry(e.target.value)} className="select-field">
+            <option value="">Select</option>
+            {countryEnums?.__type?.enumValues?.map(({ name }) => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+          </select>
+        </label>
+        <label className="checkbox-group-under-select">
+          To door:
+          <input
+            type="checkbox"
+            checked={toDoor}
+            onChange={(e) => setToDoor(e.target.checked ? 'true' : '')}
+            className="checkbox-field"
+          />
+        </label>
+      </div>
+
       <label>
-        To Country:
-        <select value={toCountry} onChange={(e) => setToCountry(e.target.value)} className="select-field">
-          <option value="">Select Country</option>
-          {countryEnums?.__type?.enumValues?.map(({ name }) => (
-            <option key={name} value={name}>{name}</option>
-          ))}
-        </select>
-      </label>
-      <label>
-        Delivery Type:
+        Delivery:
         <select value={deliveryType} onChange={(e) => setDeliveryType(e.target.value)} className="select-field">
-          <option value="">Select Delivery Type</option>
+          <option value="">Select</option>
           {deliveryTypeEnums?.__type?.enumValues?.map(({ name }) => (
             <option key={name} value={name}>{name}</option>
           ))}
         </select>
       </label>
       <label>
-        Owner Type:
+        Owner:
         <select value={ownerType} onChange={(e) => setOwnerType(e.target.value)} className="select-field">
-          <option value="">Select Owner Type</option>
+          <option value="">Select</option>
           {ownerTypeEnums?.__type?.enumValues?.map(({ name }) => (
             <option key={name} value={name}>{name}</option>
           ))}
         </select>
       </label>
       <label>
-        From Door:
-        <input
-          type="checkbox"
-          checked={fromDoor}
-          onChange={(e) => setFromDoor(e.target.checked ? 'true' : '')}
-          className="checkbox-field"
-        />
-      </label>
-      <label>
-        To Door:
-        <input
-          type="checkbox"
-          checked={toDoor}
-          onChange={(e) => setToDoor(e.target.checked ? 'true' : '')}
-          className="checkbox-field"
-        />
-      </label>
-      <label>
         Status:
         <select value={status} onChange={(e) => setStatus(e.target.value)} className="select-field">
-          <option value="">Select Status</option>
+          <option value="">Select</option>
           {statusEnums?.__type?.enumValues?.map(({ name }) => (
             <option key={name} value={name}>{name}</option>
           ))}
