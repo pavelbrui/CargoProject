@@ -1,8 +1,8 @@
 // src/admin/OrderManagement.js
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_ORDERS, GET_ENUM } from '../graphql/queries';
-import { UPDATE_ORDER_STATUS, DELETE_ORDER } from '../graphql/mutations';
+import { GET_ORDERS, GET_ENUM } from '../../graphql/queries';
+import { UPDATE_ORDER_STATUS, DELETE_ORDER } from '../../graphql/mutations';
 import './OrderManagement.css';
 import Modal from 'react-modal';
 import OrderFilters from './OrderFilters';
@@ -11,6 +11,8 @@ import OrderTable from './OrderTable';
 import { CircularProgress } from '@mui/material';
 
 Modal.setAppElement('#root');
+
+
 
 const OrderManagement = () => {
   const [orderData, setOrderData] = useState([]);
@@ -33,6 +35,7 @@ const OrderManagement = () => {
 
   const teamId = localStorage.getItem('currentTeamId');
   const token = localStorage.getItem('token');
+  
 
   const getQueryVariables = useCallback(() => {
     return {
@@ -50,7 +53,9 @@ const OrderManagement = () => {
       paginate: { limit: itemsPerPage, cursorId: currentPage > 1 ? cursorIdRef.current : null },
     };
   }, [teamId, fromCountry, toCountry, deliveryType, ownerType, fromDoor, toDoor, status, dateFilter, itemsPerPage, currentPage]);
-
+  
+   
+ 
   // Queries
   const { data: countryEnums } = useQuery(GET_ENUM, {
     variables: { enumName: "Country" },
@@ -90,6 +95,7 @@ const OrderManagement = () => {
       refetchCurrentPage();
     },
   });
+  
 
   useEffect(() => {
     if (data && data.admin && data.admin.orders) {
@@ -116,6 +122,7 @@ const OrderManagement = () => {
     if (!initialLoad) {
       refetchOrders(currentPage);
     }
+    setInitialLoad(false);
   }, [fromCountry, toCountry, deliveryType, ownerType, fromDoor, toDoor, status, dateFilter, currentPage, initialLoad, refetchOrders]);
 
   const startEditingOrder = (order) => {
@@ -201,8 +208,6 @@ const OrderManagement = () => {
 
   return (
     <div className="order-management-container">
-      <h2>Order Management</h2>
-
       <OrderFilters
         fromCountry={fromCountry}
         toCountry={toCountry}

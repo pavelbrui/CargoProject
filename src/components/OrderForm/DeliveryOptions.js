@@ -41,7 +41,7 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
 
             {/* Direction row for 'from' and 'to' countries */}
             <div style={formStyles.directionRowGrid}>
-                <div style={formStyles.fieldGroupSmallCentered}>
+                <div style={formStyles.fieldGroupSmall}>
                     <label htmlFor="fromCountry" style={formStyles.labelBlack} data-tooltip-id="from-country-tooltip" data-tooltip-content={t.fromCountryTooltip}>
                         {t.fromCountry}
                     </label>
@@ -50,7 +50,7 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         name="fromCountry"
                         value={formData.fromCountry}
                         onChange={handleChange}
-                        style={formStyles.selectCompact}
+                        style={formStyles.select}
                         required
                     >
                         <option value="USA">{t.usa}</option>
@@ -65,7 +65,7 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
 
                 <button onClick={handleReverse} style={formStyles.reverseButton}>&#8596;</button>
 
-                <div style={formStyles.fieldGroupSmallCentered}>
+                <div style={formStyles.fieldGroupSmall}>
                     <label htmlFor="toCountry" style={formStyles.labelBlack} data-tooltip-id="to-country-tooltip" data-tooltip-content={t.toCountryTooltip}>
                         {t.toCountry}
                     </label>
@@ -74,7 +74,7 @@ const DeliveryOptions = ({ formData, setFormData, t }) => {
                         name="toCountry"
                         value={formData.toCountry}
                         onChange={handleChange}
-                        style={formStyles.selectCompact}
+                        style={formStyles.select}
                         required
                     >
                         <option value="PL">{t.poland}</option>
@@ -206,18 +206,8 @@ const formStyles = {
         gap: '10px',
         marginBottom: '20px',
     },
-    fieldGroupSmallCentered: {
-        textAlign: 'center',
-    },
-    selectCompact: {
-        width: '70%',
-        padding: '12px',
-        borderRadius: '8px',
-        //border: '1px solid #b88e2f',
-        border: '1px solid #ccc',
-        boxShadow: 'inset 0 4px 12px rgba(0, 0, 0, 0.1)',
-        transition: 'border 0.3s ease',
-        margin: '0 auto',
+    fieldGroupSmall: {
+        // Removed unnecessary flex styles
     },
     reverseButton: {
         padding: '8px 12px',
@@ -230,7 +220,7 @@ const formStyles = {
         border: '1px solid #ccc',
         boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
         alignSelf: 'center',
-        marginTop: '25px',
+        marginTop: '18px',
     },
     cardBlockCombinedAligned: {
         border: '1px solid #b88e2f',
@@ -254,7 +244,7 @@ const formStyles = {
     },
     select: {
         width: '100%',
-        padding: '10px',
+        padding: '12px',
         borderRadius: '8px',
         border: '1px solid #ccc',
         boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',

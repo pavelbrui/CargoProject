@@ -61,3 +61,51 @@ mutation DeleteOrder($teamId: String!, $_id: String!) {
   }
 }
 `;
+
+
+// Mutation for editing user details
+export const EDIT_USER = gql`
+  mutation EditUser($updatedUser: UpdateUserInput!) {
+    user {
+      editUser(updatedUser: $updatedUser) {
+        result
+        hasError
+      }
+    }
+  }
+`;
+
+// Mutation for removing a user from a team
+export const REMOVE_USER_FROM_TEAM = gql`
+  mutation RemoveUserFromTeam($data: RemoveUserFromTeamInput!) {
+    admin {
+      removeUserFromTeam(data: $data) {
+        result
+        hasError
+      }
+    }
+  }
+`;
+
+
+export const UPDATE_USER = gql`
+  mutation UpdateUser($teamId: String, $updatedUser: UpdateUserInput!) {
+    admin(teamId: $teamId) {
+      editUser(updatedUser: $updatedUser) {
+        result
+        hasError
+      }
+    }
+  }
+`;
+
+export const DELETE_ADMIN = gql`
+  mutation DeleteUser($teamId: String, $userId: String!) {
+    admin(teamId: $teamId) {
+      removeUserFromTeam(data: { userId: $userId, teamId: $teamId }) {
+        result
+        hasError
+      }
+    }
+  }
+`;

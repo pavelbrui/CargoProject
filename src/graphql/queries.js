@@ -179,3 +179,22 @@ export const GET_ORDERS = gql`
 
 
 
+export const GET_USERS = gql`
+  query GetUsers($teamId: String!, $sort: SortOrdersInput, $fieldFilter: AdminOrderFilter, $paginate: PageOptions) {
+    admin(teamId: $teamId) {
+      users(sort: $sort, fieldFilter: $fieldFilter, paginate: $paginate) {
+        cursorId
+        objects {
+          _id
+          username
+          fullName
+          country
+          emailForMails
+          phone
+          createdAt
+          teams
+        }
+      }
+    }
+  }
+`;

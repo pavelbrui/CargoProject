@@ -1,0 +1,42 @@
+/* src/components/PricingTable.css */
+
+.pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .pricing-table th {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .pricing-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .pricing-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .edit-button {
+    background-color: #008cba;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .edit-button:hover {
+    background-color: #007bb5;
+  }
+  
