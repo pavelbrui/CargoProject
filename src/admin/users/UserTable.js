@@ -3,6 +3,8 @@ import React from 'react';
 import './UserTable.css';
 
 const UserTable = ({ users, startEditingUser, handleDeleteUser }) => {
+  console.log((users));
+  
   return (
     <table className="user-table">
       <thead>

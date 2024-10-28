@@ -17,7 +17,8 @@ const PricingManagement = () => {
     paymentCurrency: 'USD',
     ownerType: 'BISNES',
     priceTypes: [{ deliveryType: 'AIR', priceForKg: 0, minPrice: 0 }],
-    courierMinPrice: 0,
+    courierMinPriceFromHome: 0,
+    courierMinPriceToHome: 0,
     courierKgToHome: 0,
     courierKgFromHome: 0,
   });

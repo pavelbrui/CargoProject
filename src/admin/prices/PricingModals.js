@@ -39,7 +39,8 @@ const PricingModals = ({
       paymentCurrency: newPricing.paymentCurrency,
       ownerType: newPricing.ownerType,
       priceTypes: newPricing.priceTypes,
-      courierMinPrice: newPricing.courierMinPrice,
+      courierMinPriceFromHome: newPricing.courierMinPriceFromHome,
+      courierMinPriceToHome: newPricing.courierMinPriceToHome,
       courierKgToHome: newPricing.courierKgToHome,
       courierKgFromHome: newPricing.courierKgFromHome,
     };
@@ -65,7 +66,8 @@ const PricingModals = ({
       paymentCurrency: editingPricing.paymentCurrency,
       ownerType: editingPricing.ownerType,
       priceTypes: editingPricing.priceTypes?.map(({ __typename, ...rest }) => rest),
-      courierMinPrice: editingPricing.courierMinPrice,
+      courierMinPriceFromHome: editingPricing.courierMinPriceFromHome,
+      courierMinPriceToHome: editingPricing.courierMinPriceToHome,
       courierKgToHome: editingPricing.courierKgToHome,
       courierKgFromHome: editingPricing.courierKgFromHome,
     };

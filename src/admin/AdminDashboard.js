@@ -1,6 +1,5 @@
-// src/admin/AdminDashboard.js
-import React, { useEffect } from 'react';
-import { Routes, Route, NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, NavLink, useNavigate } from 'react-router-dom';
 import UserManagement from './users/UserManagement';
 import OrderManagement from './orders/OrderManagement';
 import PricingManagement from './prices/PricingManagement';
@@ -10,6 +9,8 @@ import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
+  const [showButtons, setShowButtons] = useState(true);
   const { data, loading, error } = useQuery(GET_USER_DETAILS, {
     fetchPolicy: 'network-only',
     context: {
@@ -29,12 +30,16 @@ const AdminDashboard = () => {
   if (loading) return <p className="loading-message">Loading user details...</p>;
   if (error) return <p className="error-message">Error loading admin details: {error.message}</p>;
 
+  const handleNavigate = (path) => {
+    navigate(path);
+    setShowButtons(false);
+  };
+
   return (
     <div className="admin-dashboard-container">
-      
       <nav className="nav-menu">
         <ul>
-          <li ><label className="nav-item1">PL-CARGO (Admin Dashboard)</label> </li>
+          <li><label className="nav-item1">PL-CARGO (Admin Dashboard)</label></li>
           <li></li>
           <li>
             <NavLink to="orders" className={({ isActive }) => (isActive ? 'active' : '')}>Order Management</NavLink>
@@ -48,6 +53,13 @@ const AdminDashboard = () => {
         </ul>
       </nav>
       <div className="admin-content">
+        {showButtons && (
+          <div className="button-container">
+            <button className="dashboard-button" onClick={() => handleNavigate('orders')}>Orders Management</button>
+            <button className="dashboard-button" onClick={() => handleNavigate('pricing')}>Pricing Management</button>
+            <button className="dashboard-button" onClick={() => handleNavigate('users')}>Users Management</button>
+          </div>
+        )}
         <Routes>
           <Route path="orders" element={<OrderManagement />} />
           <Route path="pricing" element={<PricingManagement />} />

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Modal from 'react-modal';
-import './AddPricingModal.css';
+import './EditPricingModal.css';
 
 const EditPricingModal = ({
   isEditing,
@@ -76,9 +76,9 @@ const EditPricingModal = ({
       className="modal"
       overlayClassName="modal-overlay"
     >
-      <div className="modal-header">
+      <div className="modal-header" style={{ position: 'relative' }}>
         <h3>Edit Pricing</h3>
-        <button className="close-modal-button" onClick={cancelEditing}>&times;</button>
+        <button className="close-modal-button2" onClick={cancelEditing} >&times;</button>
       </div>
       {editingPricing && (
         <>
@@ -111,6 +111,18 @@ const EditPricingModal = ({
                   }
                   className="input2"
                 />
+                <label className="label2">Courier Min Price</label>
+                <input
+                  type="number"
+                  value={editingPricing.courierMinPriceFromHome}
+                  onChange={(e) =>
+                    setEditingPricing({
+                      ...editingPricing,
+                      courierMinPriceFromHome: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                  className="input2"
+                />
               </div>
               <button
                 className="reverse-button"
@@ -121,6 +133,8 @@ const EditPricingModal = ({
                     to: prev.from,
                     courierKgToHome: prev.courierKgFromHome,
                     courierKgFromHome: prev.courierKgToHome,
+                    courierMinPriceToHome: prev.courierMinPriceFromHome,
+                    courierMinPriceFromHome:  prev.courierMinPriceToHome,
                   }));
                 }}
               >
@@ -154,22 +168,21 @@ const EditPricingModal = ({
                   }
                   className="input2"
                 />
+                <label className="label2">Courier Min Price</label>
+                <input
+                  type="number"
+                  value={editingPricing.courierMinPriceToHome}
+                  onChange={(e) =>
+                    setEditingPricing({
+                      ...editingPricing,
+                      courierMinPriceToHome: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                  className="input2"
+                />
               </div>
             </div>
-            <div className="field-group2">
-              <label className="label2">Courier Min Price</label>
-              <input
-                type="number"
-                value={editingPricing.courierMinPrice}
-                onChange={(e) =>
-                  setEditingPricing({
-                    ...editingPricing,
-                    courierMinPrice: parseFloat(e.target.value) || 0,
-                  })
-                }
-                className="input2"
-              />
-            </div>
+            <div className="field-group2"></div>
             <div className="direction-row">
               <div className="field-group">
                 <label className="label">Owner Type</label>

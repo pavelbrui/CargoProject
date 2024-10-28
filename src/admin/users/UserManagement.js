@@ -72,7 +72,7 @@ const UserManagement = () => {
 
   useEffect(() => {
     if (data && data.admin && data.admin.users) {
-      setUserData(data.admin.users.objects);
+      setUserData(data.admin.users);//.objects);
       cursorIdRef.current = data.admin.users.cursorId;
       setInitialLoad(false);
     }
@@ -82,7 +82,7 @@ const UserManagement = () => {
     setIsLoadingPage(true);
     refetch(getQueryVariables()).then((result) => {
       if (result.data && result.data.admin && result.data.admin.users) {
-        setUserData(result.data.admin.users.objects);
+        setUserData(result.data.admin.users);//.objects);
         cursorIdRef.current = result.data.admin.users.cursorId;
       }
       setIsLoadingPage(false);
@@ -187,7 +187,7 @@ const UserManagement = () => {
       />
       {/* User Table */}
       <UserTable
-        userData={userData}
+        users={userData}
         expandedUserId={expandedUserId}
         toggleExpandUser={toggleExpandUser}
         startEditingUser={startEditingUser}

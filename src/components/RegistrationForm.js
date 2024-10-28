@@ -1,21 +1,25 @@
-// src/components/RegistrationForm.js
+/* src/components/RegistrationForm.js */
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { REGISTER_USER } from '../graphql/mutations';
 import './RegistrationForm.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm = () => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
-        confirmPassword: '',
         country: 'PL'
     });
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [registerUser] = useMutation(REGISTER_USER);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,16 +29,20 @@ const RegistrationForm = () => {
         });
     };
 
+    const handleConfirmPasswordChange = (e) => {
+        setConfirmPassword(e.target.value);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (formData.password !== formData.confirmPassword) {
+        if (formData.password !== confirmPassword) {
             setErrorMessage('Passwords do not match.');
             return;
         }
         try {
             const { data } = await registerUser({ variables: { user: { ...formData } } });
             if (data?.public?.register?.registered) {
-                alert('Registration successful!');
+                setIsModalOpen(true);
             } else if (data?.public?.register?.hasError) {
                 handleRegisterError(data.public.register.hasError);
             }
@@ -71,6 +79,11 @@ const RegistrationForm = () => {
 
     const toggleShowConfirmPassword = () => {
         setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        navigate('/my_orders');
     };
 
     return (
@@ -115,8 +128,8 @@ const RegistrationForm = () => {
                             type={showConfirmPassword ? 'text' : 'password'}
                             id="confirmPassword"
                             name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
+                            value={confirmPassword}
+                            onChange={handleConfirmPasswordChange}
                             required
                         />
                         <span
@@ -129,6 +142,21 @@ const RegistrationForm = () => {
                 </div>
                 <button type="submit" className="register-button">Register</button>
             </form>
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Registration Successful"
+                className="success-modal"
+                overlayClassName="modal-overlay"
+            >
+                <div className="modal-content">
+                    <h2>Registration successful!</h2>
+                    <p>You have successfully registered. You can now log in.</p>
+                    <div className="modal-button-container">
+                        <button onClick={closeModal} className="close-modal-button">OK</button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

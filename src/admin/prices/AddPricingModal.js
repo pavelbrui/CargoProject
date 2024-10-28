@@ -35,6 +35,8 @@ const AddPricingModal = ({
       to: prev.from,
       courierKgToHome: prev.courierKgFromHome,
       courierKgFromHome: prev.courierKgToHome,
+      courierMinPriceToHome:  prev.courierMinPriceFromHome,
+      courierMinPriceFromHome: prev.courierMinPriceToHome,
     }));
   };
 
@@ -52,7 +54,7 @@ const AddPricingModal = ({
     >
       <div className="modal-header">
         <h3>Add New Pricing</h3>
-        <button className="close-modal-button" onClick={() => setIsAddingNew(false)}>&times;</button>
+        <button className="close-modal-button2" onClick={() => setIsAddingNew(false)}>&times;</button>
       </div>
       <fieldset className="fieldset">
         <legend className="legend">Basic Information</legend>
@@ -78,7 +80,15 @@ const AddPricingModal = ({
               onChange={(e) => handleNewPricingChange('courierKgFromHome', parseFloat(e.target.value) || 0)}
               className="input2"
             />
+            <label className="label2">Courier Min Price</label>
+          <input
+            type="number"
+            value={newPricing.courierMinPriceFromHome}
+            onChange={(e) => handleNewPricingChange('courierMinPriceFromHome', parseFloat(e.target.value) || 0)}
+            className="input2"
+          />
           </div>
+          
           <button className="reverse-button" onClick={handleReverse}>&#8596;</button>
           <div className="field-group">
             <label className="label">To</label>
@@ -101,16 +111,17 @@ const AddPricingModal = ({
               onChange={(e) => handleNewPricingChange('courierKgToHome', parseFloat(e.target.value) || 0)}
               className="input2"
             />
+            <label className="label2">Courier Min Price</label>
+          <input
+            type="number"
+            value={newPricing.courierMinPriceToHome}
+            onChange={(e) => handleNewPricingChange('courierMinPriceToHome', parseFloat(e.target.value) || 0)}
+            className="input2"
+          />
           </div>
         </div>
         <div className="field-group2">
-          <label className="label2">Courier Min Price</label>
-          <input
-            type="number"
-            value={newPricing.courierMinPrice}
-            onChange={(e) => handleNewPricingChange('courierMinPrice', parseFloat(e.target.value) || 0)}
-            className="input2"
-          />
+          
         </div>
         <div className="direction-row">
           <div className="field-group">

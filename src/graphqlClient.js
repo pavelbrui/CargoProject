@@ -139,14 +139,16 @@ type AdminMutation{
 	): RemoveUserFromTeamResponse!
 }
 
+
 type PriceForCountryCurrency{
 	ownerType:  OwnerType
 	_id:String!
 	direction: String!
     paymentCurrency: CountryCurrency!
 	priceTypes:  [PriceForDeliveryType]
-	courierMinPrice:Float
+	courierMinPriceToHome:Float
 	courierKgToHome:Float
+	courierMinPriceFromHome:Float
 	courierKgFromHome:Float
 
 }
@@ -156,8 +158,10 @@ input PriceForCountryCurrencyInput{
 	direction:  String!
 	paymentCurrency: CountryCurrency!
 	priceTypes:  [PriceForDeliveryTypeInput]
-	courierMinPrice:Float
+
+	courierMinPriceToHome:Float
 	courierKgToHome:Float
+	courierMinPriceFromHome:Float
 	courierKgFromHome:Float
 }
 
@@ -166,8 +170,9 @@ input UpdatePriceForCountryCurrencyInput{
 	direction:  String
 	paymentCurrency: CountryCurrency
 	priceTypes:  [PriceForDeliveryTypeInput]
-	courierMinPrice:Float
+	courierMinPriceToHome:Float
 	courierKgToHome:Float
+	courierMinPriceFromHome:Float
 	courierKgFromHome:Float
 }
 
@@ -334,6 +339,7 @@ type AdminQuery{
 		ownerType: OwnerType
 		direction:  String
 	    paymentCurrency: CountryCurrency): [PriceForCountryCurrency!]
+    users:  [User]
 }
 
 
