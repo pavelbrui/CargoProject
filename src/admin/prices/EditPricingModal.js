@@ -65,7 +65,13 @@ const EditPricingModal = ({
       }));
     }
 
-    saveEditedPricing(); // Wywołanie funkcji zapisu
+    // Jeśli ownerType jest pusty, ustaw jako undefined
+    const updatedEditingPricing = {
+      ...editingPricing,
+      ownerType: editingPricing.ownerType === "" ? null : editingPricing.ownerType,
+    };
+
+    saveEditedPricing(updatedEditingPricing); // Wywołanie funkcji zapisu
   };
 
   return (
@@ -190,7 +196,6 @@ const EditPricingModal = ({
                   name="ownerType"
                   value={editingPricing.ownerType}
                   onChange={(e) => setEditingPricing({ ...editingPricing, ownerType: e.target.value })}
-                  required
                   className="select"
                 >
                   <option value="">Select Owner Type</option>

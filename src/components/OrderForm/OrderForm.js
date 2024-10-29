@@ -35,9 +35,20 @@ const OrderForm = () => {
     const [calculateOrder] = useLazyQuery(CALCULATE_ORDER, {
         onCompleted: (data) => {
             const price = data.public.calculateMyOrder;
-            setCalculatedPrice({ amount: price, currency: formData.paymentCurrency });
+            if (price !== null) {
+                setCalculatedPrice({ amount: price, currency: formData.paymentCurrency });
+                setOrderError(null);
+            } else {
+                setOrderError('This currency is not supported for this direction.');
+                setCalculatedPrice({ amount: 0, currency: formData.paymentCurrency });
+            }
         },
-        onError: (error) => console.error('Error calculating price:', error),
+        onError: (error) => {
+            const errorMessage = error?.graphQLErrors?.[0]?.message || 'Error calculating price. Please try again.';
+            console.error('Error calculating price:', errorMessage);
+            setOrderError(errorMessage);
+            setCalculatedPrice({ amount: 0, currency: formData.paymentCurrency });
+        },
     });
 
     const [sendOrder] = useMutation(SEND_ORDER, {
@@ -120,6 +131,8 @@ const OrderForm = () => {
             <ElementInputs formData={formData} setFormData={setFormData} t={t} />
             <PriceDisplay calculatedPrice={calculatedPrice} t={t} />
 
+            {orderError && <div className="error-message" style={{ color: 'red', marginTop: '10px' }}>{orderError}</div>}
+
             {showContactForm ? (
                 <ContactInfoForm onSubmit={handleContactInfoSubmit} />
             ) : (
@@ -131,8 +144,6 @@ const OrderForm = () => {
                     {t.createOrder}
                 </button>
             )}
-
-            {orderError && <div className="error-message">{orderError}</div>}
         </div>
     );
 };

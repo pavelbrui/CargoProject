@@ -1,4 +1,3 @@
-// src/components/AddPricingModal.js
 import React from 'react';
 import Modal from 'react-modal';
 import './AddPricingModal.css';
@@ -133,6 +132,7 @@ const AddPricingModal = ({
               required
               className="select"
             >
+              <option value=''>Select Owner Type</option>
               <option value="BISNES">Business</option>
               <option value="PRIVAT">Private</option>
             </select>
