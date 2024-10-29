@@ -53,7 +53,7 @@ const AdminDashboard = () => {
         </ul>
       </nav>
       <div className="admin-content">
-        {showButtons && (
+        {showButtons && window.location.pathname === '/admins' && (
           <div className="button-container">
             <button className="dashboard-button" onClick={() => handleNavigate('orders')}>Orders Management</button>
             <button className="dashboard-button" onClick={() => handleNavigate('pricing')}>Pricing Management</button>

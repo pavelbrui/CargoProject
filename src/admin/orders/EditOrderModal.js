@@ -21,7 +21,7 @@ const EditOrderModal = ({
     >
       <div className="modal-header">
         <h3>Edit Order</h3>
-        <button className="close-modal-button" onClick={cancelEditing}>&times;</button>
+        <button className="close-modal-button2" onClick={cancelEditing}>&times;</button>
       </div>
       {editingOrder && (
         <div className="modal-body">

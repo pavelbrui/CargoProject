@@ -109,6 +109,18 @@ export const GET_PRICINGS = gql`
 `;
 
 
+export const GET_DIRECTIONS = gql`
+  query GetPricings( $teamId: String!) {
+    admin(teamId: $teamId) {
+      getPricings {
+        direction
+        paymentCurrency
+      }
+    }
+  }
+`;
+
+
 export const GET_ENUM = gql`
 query GetEnumValues($enumName: String!) {
   __type(name: $enumName) {
@@ -172,10 +184,6 @@ export const GET_ORDERS = gql`
     }
   }
 `;
-
-
-
-
 
 
 

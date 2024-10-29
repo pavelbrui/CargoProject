@@ -10,7 +10,10 @@ const OrderFilters = ({
   toDoor,
   status,
   dateFilter,
-  countryEnums,
+  paymentCurrency,
+  fromCountryEnums,
+  toCountryEnums,
+  currencyEnums,
   deliveryTypeEnums,
   ownerTypeEnums,
   statusEnums,
@@ -22,6 +25,7 @@ const OrderFilters = ({
   setFromDoor,
   setToDoor,
   setStatus,
+  setPaymentCurrency,
   handleSwapCountries,
 }) => {
   return (
@@ -31,7 +35,7 @@ const OrderFilters = ({
           From:
           <select value={fromCountry} onChange={(e) => setFromCountry(e.target.value)} className="select-field">
             <option value="">Select</option>
-            {countryEnums?.__type?.enumValues?.map(({ name }) => (
+            {Object.keys(fromCountryEnums).map((name) => (
               <option key={name} value={name}>{name}</option>
             ))}
           </select>
@@ -56,7 +60,7 @@ const OrderFilters = ({
           To:
           <select value={toCountry} onChange={(e) => setToCountry(e.target.value)} className="select-field">
             <option value="">Select</option>
-            {countryEnums?.__type?.enumValues?.map(({ name }) => (
+            {Object.keys(toCountryEnums).map((name) => (
               <option key={name} value={name}>{name}</option>
             ))}
           </select>
@@ -71,6 +75,16 @@ const OrderFilters = ({
           />
         </label>
       </div>
+
+      <label>
+        Currency:
+        <select value={paymentCurrency} onChange={(e) => setPaymentCurrency(e.target.value)} className="select-field">
+          <option value="">Select</option>
+          {Object.keys(currencyEnums).map((name) => (
+            <option key={name} value={name}>{name}</option>
+          ))}
+        </select>
+      </label>
 
       <label>
         Delivery:

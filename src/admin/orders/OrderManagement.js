@@ -1,7 +1,7 @@
 // src/admin/OrderManagement.js
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_ORDERS, GET_ENUM } from '../../graphql/queries';
+import { GET_DIRECTIONS, GET_ORDERS, GET_ENUM } from '../../graphql/queries';
 import { UPDATE_ORDER_STATUS, DELETE_ORDER } from '../../graphql/mutations';
 import './OrderManagement.css';
 import Modal from 'react-modal';
@@ -12,8 +12,6 @@ import { CircularProgress } from '@mui/material';
 
 Modal.setAppElement('#root');
 
-
-
 const OrderManagement = () => {
   const [orderData, setOrderData] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -21,6 +19,7 @@ const OrderManagement = () => {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [fromCountry, setFromCountry] = useState('');
   const [toCountry, setToCountry] = useState('');
+  const [paymentCurrency, setPaymentCurrency] = useState('');
   const [deliveryType, setDeliveryType] = useState('');
   const [ownerType, setOwnerType] = useState('');
   const [fromDoor, setFromDoor] = useState('');
@@ -35,7 +34,6 @@ const OrderManagement = () => {
 
   const teamId = localStorage.getItem('currentTeamId');
   const token = localStorage.getItem('token');
-  
 
   const getQueryVariables = useCallback(() => {
     return {
@@ -45,6 +43,7 @@ const OrderManagement = () => {
         direction: fromCountry && toCountry ? `${fromCountry}_${toCountry}` : undefined,
         deliveryType: deliveryType || undefined,
         ownerType: ownerType || undefined,
+        paymentCurrency: paymentCurrency || undefined,
         fromDoor: fromDoor ? fromDoor === 'true' : undefined,
         toDoor: toDoor ? toDoor === 'true' : undefined,
         status: status || undefined,
@@ -52,13 +51,15 @@ const OrderManagement = () => {
       dateFilter: dateFilter.from || dateFilter.to ? { from: dateFilter.from, to: dateFilter.to } : undefined,
       paginate: { limit: itemsPerPage, cursorId: currentPage > 1 ? cursorIdRef.current : null },
     };
-  }, [teamId, fromCountry, toCountry, deliveryType, ownerType, fromDoor, toDoor, status, dateFilter, itemsPerPage, currentPage]);
-  
-   
- 
+  }, [teamId, fromCountry, toCountry, deliveryType, ownerType, fromDoor, toDoor, status, paymentCurrency, dateFilter, itemsPerPage, currentPage]);
+
   // Queries
-  const { data: countryEnums } = useQuery(GET_ENUM, {
-    variables: { enumName: "Country" },
+
+  const { data: directionsData } = useQuery(GET_DIRECTIONS, {
+    variables: { teamId },
+    context: { headers: { Authorization: `${token}` } },
+    fetchPolicy: 'network-only',
+    skip: initialLoad,
   });
 
   const { data: statusEnums } = useQuery(GET_ENUM, {
@@ -80,6 +81,25 @@ const OrderManagement = () => {
     skip: !initialLoad,
   });
 
+
+  const fromCountryEnums = {};
+  const toCountryEnums = {};
+  const currencyEnums = {};
+  
+  if (directionsData?.admin?.getPricings) {
+    directionsData.admin.getPricings.forEach(pricing => {
+      const [from, to] = pricing.direction.split('_');
+      fromCountryEnums[from] = from;
+      toCountryEnums[to] = to;
+      currencyEnums[pricing.paymentCurrency] = pricing.paymentCurrency;
+    });
+  }
+  
+  Object.freeze(fromCountryEnums);
+  Object.freeze(toCountryEnums);
+  Object.freeze(currencyEnums);
+  
+
   // Mutations
   const [updateOrderStatus] = useMutation(UPDATE_ORDER_STATUS, {
     context: { headers: { Authorization: `${token}` } },
@@ -95,7 +115,6 @@ const OrderManagement = () => {
       refetchCurrentPage();
     },
   });
-  
 
   useEffect(() => {
     if (data && data.admin && data.admin.orders) {
@@ -105,17 +124,17 @@ const OrderManagement = () => {
     }
   }, [data]);
 
-  const refetchOrders = useCallback((pageNumber) => { 
-      setIsLoadingPage(true);
-      refetch(getQueryVariables()).then((result) => {
+  const refetchOrders = useCallback((pageNumber) => {
+    setIsLoadingPage(true);
+    refetch(getQueryVariables()).then((result) => {
         if (result.data && result.data.admin && result.data.admin.orders) {
           setOrderData(result.data.admin.orders.objects);
           cursorIdRef.current = result.data.admin.orders.cursorId;
-        }
-        setIsLoadingPage(false);
-      }).catch(() => {
-        setIsLoadingPage(false);
-      });
+      }
+      setIsLoadingPage(false);
+    }).catch(() => {
+      setIsLoadingPage(false);
+    });
   }, [getQueryVariables, refetch]);
 
   useEffect(() => {
@@ -123,7 +142,7 @@ const OrderManagement = () => {
       refetchOrders(currentPage);
     }
     setInitialLoad(false);
-  }, [fromCountry, toCountry, deliveryType, ownerType, fromDoor, toDoor, status, dateFilter, currentPage, initialLoad, refetchOrders]);
+  }, [fromCountry, toCountry, deliveryType, ownerType, fromDoor, toDoor, status, paymentCurrency, dateFilter, currentPage, initialLoad, refetchOrders]);
 
   const startEditingOrder = (order) => {
     setEditingOrder(order);
@@ -214,14 +233,18 @@ const OrderManagement = () => {
         deliveryType={deliveryType}
         ownerType={ownerType}
         fromDoor={fromDoor}
+        paymentCurrency={paymentCurrency}
         toDoor={toDoor}
         status={status}
         dateFilter={dateFilter}
-        countryEnums={countryEnums}
+        fromCountryEnums={fromCountryEnums}
+        toCountryEnums={toCountryEnums}
+        currencyEnums={currencyEnums}
         deliveryTypeEnums={deliveryTypeEnums}
         ownerTypeEnums={ownerTypeEnums}
         statusEnums={statusEnums}
         setFromCountry={setFromCountry}
+        setPaymentCurrency={setPaymentCurrency}
         setToCountry={setToCountry}
         setDeliveryType={setDeliveryType}
         setOwnerType={setOwnerType}
